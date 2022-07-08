@@ -13,9 +13,24 @@ values('videotitle1', 'director1', '1970-01-20', 3, 'horror'),
 ('videotitle2', 'director2', '2000-06-01', 4, 'documentary'),
 ('videotitle3', 'director1', '2020-12-21', 5, 'comedy');
 
+select * from rooms;
+INSERT INTO rooms(capacity,hasPresenterTools)
+values('10', '1'),
+('5', '0'),
+('20', '1');
+
 select * from checkedoutbooks;
+INSERT INTO checkedoutbooks(books_id,patrons_id,dueDate)
+values('1', '1','2000-06-01'),
+('3', '3','2022-01-01');
+
 select * from checkedoutrooms;
-select * from checkedoutvideos;
+INSERT INTO checkedoutrooms(patrons_id,rooms_roomNumber,dueDate)
+values('2', '2','2022-08-01');
+
+select * from checkoutvideos;
+INSERT INTO checkoutvideos(patrons_id,videos_id,dueDate)
+values('1', '3','2010-09-01');
 
 select * from requests;
 INSERT INTO requests(description,submissionDate,title,patrons_id)
@@ -52,5 +67,3 @@ INSERT INTO librarianpatronconnection(librarians_id,patrons_id)
 values(1, 1),
 (1, 2),
 (2, 3);
-
-
