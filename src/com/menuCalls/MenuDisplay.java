@@ -40,6 +40,31 @@ public class MenuDisplay {
 		System.out.println(patMenu);
 	}
 	
+	public static void viewVideoBooks() {
+		String vidmenu = "——Video and Book Collections—----\r\n" + 
+				"1. View Books\r\n" + 
+				"2. View Videos\r\n" + 
+				"3. Add Book\r\n" +
+				"4. Add Video\r\n" +
+				"5. Remove Book\r\n" +
+				"6. Remove Video\r\n" +
+				"0. To Exit\r\n" + 
+				"—-----------------------------------------------\r\n" + 
+				"";
+		System.out.println(vidmenu);
+	}
+	
+	public static void viewModifyPatrons() {
+		String vModPat = "—---------View/Modify Patrons—------\r\n" + 
+				"1. View All Patrons\r\n" + 
+				"2. Register Patron\r\n" + 
+				"3. Remove Patron\r\n" +
+				"0. To Exit\r\n" + 
+				"—---------------------------------------------\r\n" + 
+				"";
+		System.out.println(vModPat);
+	}
+	
 	public static void closingProgram() {
 		String closeMessage = "Exiting the program...\r\n";
 		System.out.println(closeMessage);
