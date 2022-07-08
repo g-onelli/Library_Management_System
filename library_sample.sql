@@ -50,9 +50,18 @@ values(100.00, '2021-12-31','Overdue', 1),
 
 select * from librarians;
 INSERT INTO librarians(name,salary,position,email,phoneNumber)
-values('Gabriela', 80000, 'Head Librarian', 'email@email.com', '5555555555'),
-('Librarian1',  60000, 'Associate Librarian', 'email@email.com', '5555555555');
+values('Gabriela', 80000, 'Head Librarian', 'email@email.com', '5555555555','test'),
+('Librarian1',  60000, 'Associate Librarian', 'email@email.com', '5555555555','test');
 
+
+ALTER TABLE librarians
+ADD COLUMN password varchar(255) not NULL;
+
+ALTER TABLE patrons
+ADD COLUMN password varchar(255) not NULL;
+
+update patrons
+set password = 'test';
 
 select * from patrons;
 
