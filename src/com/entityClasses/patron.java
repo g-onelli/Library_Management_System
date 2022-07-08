@@ -15,19 +15,17 @@ public class patron {
 		this.password = password;
 	}
 
-	public patron(){
-        super();
-    }
-
-    public patron(int id, String name, String cardExpirationDate, double balance) {
+    public patron(int id, String name, String cardExpirationDate, double balance, String password) {
         super();
         this.id = id;
         this.name = name;
         this.cardExpirationDate = cardExpirationDate;
         this.balance = balance;
+        this.password = password;
     }
 
-    public int getId() {
+
+	public int getId() {
         return id;
     }
 
@@ -64,5 +62,6 @@ public class patron {
 		return "patron [id=" + id + ", name=" + name + ", cardExpirationDate=" + cardExpirationDate + ", balance="
 				+ balance + ", password=" + password + "]";
 	}
-    
+
+
 }

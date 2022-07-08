@@ -52,4 +52,21 @@ public class DB {
 		dbClose();
 		return list;
 	}
+	public List<patron> showPatrons() {
+		dbConnect();
+		String sql = "select * from patrons";
+		List<patron> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+			
+			while(rst.next()) {	
+				list.add(new patron(rst.getInt("id"),rst.getString("name"),rst.getString("cardExpirationDate"),rst.getDouble("balance"),rst.getString("password")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	}
 }

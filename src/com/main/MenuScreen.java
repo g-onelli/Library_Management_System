@@ -1,3 +1,4 @@
+
 package com.main;
 
 import java.util.Scanner;
@@ -170,6 +171,29 @@ public class MenuScreen {
 			}
 		}else {
 			//Call switch statement for patron menu
+			while(true) {
+				System.out.println("------------Patron Login-----------\\r\\n");
+				System.out.println("Enter Id: ");
+				int id = login.nextInt();
+				PatronUtility util = new PatronUtility();
+				boolean isValidId = util.validateId(db.showPatrons(), id);
+				if(!isValidId) {
+					System.out.println("Invalid ID, Try Again");
+				}
+				else {
+					System.out.println("Enter Password: ");
+					login.nextLine();
+					String password = login.nextLine();
+					boolean isValidPass = util.validatePass(db.showPatrons(), id, password);
+					if(!isValidPass) {
+						System.out.println("Invalid Password, Try Again");
+					}
+					else {
+						System.out.println("Login Sucessful...");
+						break;
+					}
+				}
+				}
 			MenuDisplay.patMenuDisplay();
 			int patronInput = loginChoice.nextInt();
 			while(true){
