@@ -29,7 +29,6 @@ public class MenuScreen {
 				}
 				
 				switch(librarianInput) {
-<<<<<<< HEAD
 				case 1:
 					MenuDisplay.viewVideoBooks();
 					int vid = loginChoice.nextInt();
@@ -130,19 +129,12 @@ public class MenuScreen {
 							break;
 						}
 					}
-=======
-				case 1: //1. View video and book collections
 					break;
-				case 2: //2. View room collections
+				case 4:
 					break;
-				case 3: //3. View/Modify Patrons
->>>>>>> 8441d568b1230dd262efba955f660d6803549674
+				case 5:
 					break;
-				case 4: //4. Events
-					break;
-				case 5: //5. View book request
-					break;
-				case 6: //6. Renew Library cards
+				case 6:
 					break;
 				default:
 					break;
@@ -159,16 +151,15 @@ public class MenuScreen {
 				}
 				
 				switch(patronInput) {
-				case 1: //1. View video and book collections
+				case 1:
 					break;
-				case 2: //2. View room collections
+				case 2:
 					break;
-				case 3: //3. View your checked out books and videos
+				case 3:
 					break;
-				case 4: //4. Submit book requests
+				case 4:
 					break;
-				case 5: //5. View overdue books and videos\r\n"
-					
+				case 5:
 					break;
 				default:
 					break;
