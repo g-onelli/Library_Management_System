@@ -3,6 +3,9 @@ package com.main.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
+
+import com.entityClasses.librarian;
 
 public class DB {
 	Connection con;
@@ -27,5 +30,9 @@ public class DB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	public List<librarian> showLibrarians() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

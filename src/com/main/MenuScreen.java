@@ -2,12 +2,15 @@ package com.main;
 import java.util.Scanner;
 
 import com.main.db.DB;
+import com.main.utility.LibrarianUtility;
+import com.main.utility.PatronUtility;
 import com.menuCalls.MenuDisplay;
 public class MenuScreen {
 	public static void main(String[] args) {
 		DB db = new DB();
 		db.dbConnect();
 		Scanner loginChoice = new Scanner(System.in);
+		Scanner login = new Scanner(System.in);
 		MenuDisplay.mainMenuDisplay();
 		System.out.println("Please choose an option: ");
 		int loginInput = loginChoice.nextInt();
@@ -17,8 +20,19 @@ public class MenuScreen {
 		}
 		if(loginInput == 1) {
 			//Call switch statement for librarian menu
+			System.out.println("------------Librarian Login-----------\\r\\n");
+			System.out.println("Enter Id: ");
+			int id = login.nextInt();
+			LibrarianUtility util = new LibrarianUtility();
+			boolean isValid = util.validateId(db.showLibrarians(), id);
+			if(!isValid) {
+				System.out.println("Invalid ID, Try Again");
+				break;
+			}
 			MenuDisplay.libMenuDisplay();
 			int librarianInput = loginChoice.nextInt();
+			
+			
 			while(true){
 				if(librarianInput == 0) {
 					System.out.println("Exiting.. Bye");
