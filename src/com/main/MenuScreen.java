@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 import com.entityClasses.*;
 import com.main.db.DB;
+import com.main.utility.LibrarianUtility;
+import com.main.utility.PatronUtility;
 import com.menuCalls.MenuDisplay;
 
 public class MenuScreen {
@@ -11,6 +13,7 @@ public class MenuScreen {
 		DB db = new DB();
 		db.dbConnect();
 		Scanner loginChoice = new Scanner(System.in);
+		Scanner login = new Scanner(System.in);
 		MenuDisplay.mainMenuDisplay();
 		System.out.println("Please choose an option: ");
 		int loginInput = loginChoice.nextInt();
@@ -20,14 +23,39 @@ public class MenuScreen {
 		}
 		if(loginInput == 1) {
 			//Call switch statement for librarian menu
+			while(true) {
+				System.out.println("------------Librarian Login-----------\\r\\n");
+				System.out.println("Enter Id: ");
+				int id = login.nextInt();
+				LibrarianUtility util = new LibrarianUtility();
+				boolean isValidId = util.validateId(db.showLibrarians(), id);
+				if(!isValidId) {
+					System.out.println("Invalid ID, Try Again");
+				}
+				else {
+					System.out.println("Enter Password: ");
+					login.nextLine();
+					String password = login.nextLine();
+					boolean isValidPass = util.validatePass(db.showLibrarians(), id, password);
+					if(!isValidPass) {
+						System.out.println("Invalid Password, Try Again");
+					}
+					else {
+						System.out.println("Login Sucessful...");
+						break;
+					}
+				}
+				}
 			MenuDisplay.libMenuDisplay();
 			int librarianInput = loginChoice.nextInt();
+			
+			
 			while(true){
 				if(librarianInput == 0) {
 					System.out.println("Exiting.. Bye");
 					break;
 				}
-				
+				//Call switch statement for librarian menu
 				switch(librarianInput) {
 				case 1:
 					MenuDisplay.viewVideoBooks();
