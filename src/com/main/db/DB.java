@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.entityClasses.book;
 import com.entityClasses.librarian;
 import com.entityClasses.patron;
 
@@ -52,6 +53,24 @@ public class DB {
 		dbClose();
 		return list;
 	}
+	public List<book> showBooks() {
+		dbConnect();
+		String sql = "select * from librarians";
+		List<book> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+			
+			while(rst.next()) {	
+				list.add(new book(rst.getInt("id"),rst.getString("title"),rst.getString("author"),rst.getString("publisher"),rst.getDouble("callNumber"),rst.getString("genre")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	}
+	
 	public List<patron> showPatrons() {
 		dbConnect();
 		String sql = "select * from patrons";
