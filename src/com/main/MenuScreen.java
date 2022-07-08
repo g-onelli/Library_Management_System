@@ -23,15 +23,29 @@ public class MenuScreen {
 		}
 		if(loginInput == 1) {
 			//Call switch statement for librarian menu
-			System.out.println("------------Librarian Login-----------\\r\\n");
-			System.out.println("Enter Id: ");
-			int id = login.nextInt();
-			LibrarianUtility util = new LibrarianUtility();
-			boolean isValid = util.validateId(db.showLibrarians(), id);
-			if(!isValid) {
-				System.out.println("Invalid ID, Try Again");
-				break;
-			}
+			while(true) {
+				System.out.println("------------Librarian Login-----------\\r\\n");
+				System.out.println("Enter Id: ");
+				int id = login.nextInt();
+				LibrarianUtility util = new LibrarianUtility();
+				boolean isValidId = util.validateId(db.showLibrarians(), id);
+				if(!isValidId) {
+					System.out.println("Invalid ID, Try Again");
+				}
+				else {
+					System.out.println("Enter Password: ");
+					login.nextLine();
+					String password = login.nextLine();
+					boolean isValidPass = util.validatePass(db.showLibrarians(), id, password);
+					if(!isValidPass) {
+						System.out.println("Invalid Password, Try Again");
+					}
+					else {
+						System.out.println("Login Sucessful...");
+						break;
+					}
+				}
+				}
 			MenuDisplay.libMenuDisplay();
 			int librarianInput = loginChoice.nextInt();
 			
@@ -41,7 +55,7 @@ public class MenuScreen {
 					System.out.println("Exiting.. Bye");
 					break;
 				}
-				
+				//Call switch statement for librarian menu
 				switch(librarianInput) {
 				case 1:
 					MenuDisplay.viewVideoBooks();

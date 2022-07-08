@@ -2,10 +2,14 @@ package com.main.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.entityClasses.librarian;
+import com.entityClasses.patron;
 
 public class DB {
 	Connection con;
@@ -32,7 +36,20 @@ public class DB {
 		}
 	}
 	public List<librarian> showLibrarians() {
-		// TODO Auto-generated method stub
-		return null;
+		dbConnect();
+		String sql = "select * from librarians";
+		List<librarian> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+			
+			while(rst.next()) {	
+				list.add(new librarian(rst.getInt("id"),rst.getString("name"),rst.getDouble("salary"),rst.getString("position"),rst.getString("email"),rst.getString("phoneNumber"),rst.getString("password")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
 	}
 }
