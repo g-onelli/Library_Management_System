@@ -1,6 +1,7 @@
 
 package com.main;
 
+import java.util.List;
 import java.util.Scanner;
 
 import com.entityClasses.*;
@@ -146,7 +147,7 @@ public class MenuScreen {
 							String name = loginChoice.nextLine();
 							System.out.println("Enter Card Exp. Date:");
 							String expDate = loginChoice.nextLine();
-							tempPat = new patron(0, name, expDate, 0);
+							//tempPat = new patron(0, name, expDate, 0);
 							//add tempPat to the database
 							break;
 						case 3:
@@ -206,12 +207,18 @@ public class MenuScreen {
 				case 1: //1. View video and book collections
 					break;
 				case 2: //2. View room collections
+					List<room> list = db.showRooms();
+					for(room r: list) {
+						System.out.println(r);
+					}
 					break;
 				case 3: //3. View your checked out books and videos
 					break;
 				case 4: //4. Submit book requests
 					break;
 				case 5: //5. View overdue books and videos
+					break;
+				case 6: //6. Reserve a room
 					break;
 				default:
 					break;
