@@ -26,17 +26,17 @@ public class MenuScreen {
 				}
 				
 				switch(librarianInput) {
-				case 1:
+				case 1: //1. View video and book collections
 					break;
-				case 2:
+				case 2: //2. View room collections
 					break;
-				case 3:
+				case 3: //3. View/Modify Patrons
 					break;
-				case 4:
+				case 4: //4. Events
 					break;
-				case 5:
+				case 5: //5. View book request
 					break;
-				case 6:
+				case 6: //6. Renew Library cards
 					break;
 				default:
 					break;
@@ -53,15 +53,16 @@ public class MenuScreen {
 				}
 				
 				switch(patronInput) {
-				case 1:
+				case 1: //1. View video and book collections
 					break;
-				case 2:
+				case 2: //2. View room collections
 					break;
-				case 3:
+				case 3: //3. View your checked out books and videos
 					break;
-				case 4:
+				case 4: //4. Submit book requests
 					break;
-				case 5:
+				case 5: //5. View overdue books and videos\r\n"
+					
 					break;
 				default:
 					break;
