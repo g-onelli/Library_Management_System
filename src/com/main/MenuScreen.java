@@ -207,6 +207,7 @@ public class MenuScreen {
 				case 1: //1. View video and book collections
 					break;
 				case 2: //2. View room collections
+					//Unfinished 
 					List<room> list = db.showRooms();
 					for(room r: list) {
 						System.out.println(r);
