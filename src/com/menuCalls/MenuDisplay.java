@@ -34,6 +34,7 @@ public class MenuDisplay {
 				+ "3. View your checked out books and videos\r\n"
 				+ "4. Submit book requests\r\n"
 				+ "5. View overdue books and videos\r\n"
+				+ "6. Reserve a room\r\n"
 				+ "0. To Exit\r\n"
 				+ "—-----------------------------------------------\r\n"
 				+ "";

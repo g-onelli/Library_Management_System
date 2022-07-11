@@ -1,7 +1,11 @@
 
 package com.main;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
+=======
+
+>>>>>>> 78aaa48128ddc337788caa6445e3feeed6ecbce1
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,6 +16,7 @@ import com.entityClasses.video;
 import com.main.db.DB;
 import com.main.utility.LibrarianUtility;
 import com.main.utility.PatronUtility;
+import com.main.utility.RoomUtility;
 import com.menuCalls.MenuDisplay;
 
 public class MenuScreen {
@@ -52,11 +57,11 @@ public class MenuScreen {
 					}
 				}
 				}
-			MenuDisplay.libMenuDisplay();
-			int librarianInput = loginChoice.nextInt();
 			
 			
 			while(true){
+				MenuDisplay.libMenuDisplay();
+				int librarianInput = loginChoice.nextInt();
 				if(librarianInput == 0) {
 					System.out.println("Exiting.. Bye");
 					break;
@@ -64,7 +69,7 @@ public class MenuScreen {
 				//Call switch statement for librarian menu
 				switch(librarianInput) {
 				case 1:
-					MenuDisplay.viewVideoBooks();
+					//MenuDisplay.viewVideoBooks();
 					int vid = loginChoice.nextInt();
 					while(true){
 						if(librarianInput == 0) {
@@ -144,15 +149,21 @@ public class MenuScreen {
 				case 2:
 					//Room collections -output list of rooms from the database
 					System.out.println("List of schedulable rooms:");
+<<<<<<< HEAD
 					List<room> rooms = new ArrayList<>();
 					rooms = db.showRooms();
 					for (room r : rooms) {
 						System.out.println(r.toString());
+=======
+					List<room> list = db.showRooms();
+					for(room r: list) {
+						System.out.println(r);
+>>>>>>> 78aaa48128ddc337788caa6445e3feeed6ecbce1
 					}
 					break;
 				case 3:
 					//View / modify patrons
-					MenuDisplay.viewModifyPatrons();
+					//MenuDisplay.viewModifyPatrons();
 					int vMP = loginChoice.nextInt();
 					while(true){
 						if(librarianInput == 0) {
@@ -176,10 +187,15 @@ public class MenuScreen {
 							String name = loginChoice.nextLine();
 							System.out.println("Enter Card Exp. Date:");
 							String expDate = loginChoice.nextLine();
+<<<<<<< HEAD
 							System.out.println("Enter Patron Password:");
 							String password = loginChoice.nextLine();
 							tempPat = new patron(0, name, expDate, 0, password);
 							System.out.println(db.insertPatron(tempPat));
+=======
+							//tempPat = new patron(0, name, expDate, 0);
+							//add tempPat to the database
+>>>>>>> 78aaa48128ddc337788caa6445e3feeed6ecbce1
 							break;
 						case 3:
 							//Remove Patrons
@@ -226,25 +242,57 @@ public class MenuScreen {
 						break;
 					}
 				}
-				}
+			}
 			MenuDisplay.patMenuDisplay();
-			int patronInput = loginChoice.nextInt();
 			while(true){
+				MenuDisplay.patMenuDisplay();
+				int patronInput = loginChoice.nextInt();
 				if(patronInput == 0) {
 					System.out.println("Exiting.. Bye");
 					break;
 				}
-				
 				switch(patronInput) {
-				case 1:
+				case 1: //1. View video and book collections
 					break;
-				case 2:
+				case 2: //2. View room collections
+					List<room> list = db.showRooms();
+					for(room r: list) {
+						System.out.println(r);
+					}
 					break;
-				case 3:
+				case 3: //3. View your checked out books and videos
 					break;
-				case 4:
+				case 4: //4. Submit book requests
 					break;
-				case 5:
+				case 5: //5. View overdue books and videos
+					break;
+				case 6: //6. Reserve a room
+					List<room> list2 = db.showRooms();
+					for(room r: list2) {
+						System.out.println(r);
+					}
+					System.out.println("Enter a room number:");
+					int roomId = login.nextInt();
+					RoomUtility util = new RoomUtility();
+					boolean isValidId = util.validateRoomId(db.showRooms(), roomId);
+					if(!isValidId) {
+						System.out.println("Invalid ID, Try Again");
+					}
+					else{
+						System.out.println("Enter Patron ID: ");
+						checkedOutRoom reserve = new checkedOutRoom();
+						int pId = login.nextInt();
+						reserve.setPatrons_id(pId);
+						reserve.setRooms_roomnumber(roomId);
+						long millis=System.currentTimeMillis();  
+				        java.sql.Date date=new java.sql.Date(millis);  
+				        String dueDate = date.toString();
+						reserve.setDueDate(dueDate);
+						db.reserveRoom(reserve);
+						System.out.println("Room Reserved.");
+					}
+					
+					
 					break;
 				default:
 					break;
