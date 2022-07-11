@@ -33,6 +33,23 @@ public class MenuScreen {
 				case 3: //3. View/Modify Patrons
 					break;
 				case 4: //4. Events
+					MenuDisplay.eventMenuDisplay();
+					int eventInput = loginChoice.nextInt();
+					if(eventInput == 1) {
+						//Display events
+					}else if(eventInput ==2) {
+						//edit event
+					}else if(eventInput==3) {
+						//add event
+					}else if(eventInput==4) {
+						//remove event
+					}else {
+						System.out.println("Returning to librarian menu");
+					}
+					//Call events 
+					//Gain access to view events
+					//Edit events
+					//
 					break;
 				case 5: //5. View book request
 					break;
