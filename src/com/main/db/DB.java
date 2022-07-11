@@ -8,18 +8,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
+
 import com.entityClasses.book;
 import com.entityClasses.librarian;
 import com.entityClasses.patron;
 import com.entityClasses.room;
 import com.entityClasses.video;
-=======
 import com.entityClasses.checkedOutRoom;
-import com.entityClasses.librarian;
-import com.entityClasses.patron;
-import com.entityClasses.room;
->>>>>>> 78aaa48128ddc337788caa6445e3feeed6ecbce1
+
 
 public class DB {
 	Connection con;
@@ -97,7 +93,6 @@ public class DB {
 		dbClose();
 		return list;
 	}
-<<<<<<< HEAD
 	
 	public String insertPatron(patron newPatron) {
 		dbConnect();
@@ -132,9 +127,7 @@ public class DB {
 		dbClose();
 		return "Successfully removed patron.";
 	}
-	
-=======
->>>>>>> 78aaa48128ddc337788caa6445e3feeed6ecbce1
+
 	public List<room> showRooms() {
 		dbConnect();
 		String sql = "select * from rooms";
@@ -152,7 +145,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-<<<<<<< HEAD
+
 	
 	public List<video> showVideos() {
 		dbConnect();
@@ -246,7 +239,6 @@ public class DB {
 		return "Successfully removed Video.";
 	}
 	
-=======
 	public void reserveRoom(checkedOutRoom reserve) {
 		dbConnect();
 		String sql = "insert into checkedOutRooms(patrons_id,room_roomNumber,dueDate) "
@@ -263,5 +255,5 @@ public class DB {
 		dbClose();
 		
 	}
->>>>>>> 78aaa48128ddc337788caa6445e3feeed6ecbce1
+
 }

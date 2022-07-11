@@ -37,8 +37,4 @@ public class room {
 	public void setHasPresenterTools(int hasPresenterTools) {
 		this.hasPresenterTools = hasPresenterTools;
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 78aaa48128ddc337788caa6445e3feeed6ecbce1
