@@ -48,11 +48,11 @@ public class MenuScreen {
 					}
 				}
 				}
-			MenuDisplay.libMenuDisplay();
-			int librarianInput = loginChoice.nextInt();
 			
 			
 			while(true){
+				MenuDisplay.libMenuDisplay();
+				int librarianInput = loginChoice.nextInt();
 				if(librarianInput == 0) {
 					System.out.println("Exiting.. Bye");
 					break;
@@ -60,7 +60,7 @@ public class MenuScreen {
 				//Call switch statement for librarian menu
 				switch(librarianInput) {
 				case 1:
-					MenuDisplay.viewVideoBooks();
+					//MenuDisplay.viewVideoBooks();
 					int vid = loginChoice.nextInt();
 					while(true){
 						if(librarianInput == 0) {
@@ -126,10 +126,14 @@ public class MenuScreen {
 				case 2:
 					//Room collections -output list of rooms from the database
 					System.out.println("List of schedulable rooms:");
+					List<room> list = db.showRooms();
+					for(room r: list) {
+						System.out.println(r);
+					}
 					break;
 				case 3:
 					//View / modify patrons
-					MenuDisplay.viewModifyPatrons();
+					//MenuDisplay.viewModifyPatrons();
 					int vMP = loginChoice.nextInt();
 					while(true){
 						if(librarianInput == 0) {
@@ -194,20 +198,19 @@ public class MenuScreen {
 						break;
 					}
 				}
-				}
+			}
 			MenuDisplay.patMenuDisplay();
-			int patronInput = loginChoice.nextInt();
 			while(true){
+				MenuDisplay.patMenuDisplay();
+				int patronInput = loginChoice.nextInt();
 				if(patronInput == 0) {
 					System.out.println("Exiting.. Bye");
 					break;
 				}
-				
 				switch(patronInput) {
 				case 1: //1. View video and book collections
 					break;
 				case 2: //2. View room collections
-					//Unfinished 
 					List<room> list = db.showRooms();
 					for(room r: list) {
 						System.out.println(r);
