@@ -5,12 +5,15 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
+import java.time.LocalDate;
 
-import com.entityClasses.librarian;
-import com.entityClasses.patron;
-import com.entityClasses.room;
+import com.entityClasses.*;
 
 public class DB {
 	Connection con;
@@ -84,6 +87,128 @@ public class DB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		dbClose();
+		return list;
+	}
+
+	public List<String> fetchCheckedOutBooks(int id) {
+
+		dbConnect();
+
+		List<String> list = new ArrayList<>();
+
+		String sql = "select * from books b, checkedoutbooks cb where cb.books_id = b.id and cb.patrons_id = ?";
+
+		try {
+			PreparedStatement pStmt = con.prepareStatement(sql);
+			pStmt.setInt(1, id);
+			ResultSet rst = pStmt.executeQuery();
+			while (rst.next()) {
+
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Due Date: " + rst.getString("dueDate"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		dbClose();
+		return list;
+	}
+
+	public List<String> fetchCheckedOutVideos(int id) {
+
+		dbConnect();
+
+		List<String> list = new ArrayList<>();
+
+		String sql = "select * from videos v, checkedoutvideos cv where cv.videos_id = v.id and cv.patrons_id = ?";
+
+		try {
+			PreparedStatement pStmt = con.prepareStatement(sql);
+			pStmt.setInt(1, id);
+			ResultSet rst = pStmt.executeQuery();
+			while (rst.next()) {
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Due Date: " + rst.getString("dueDate"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		dbClose();
+		return list;
+	}
+
+	public List<String> fetchOverdueBooks(int id) {
+
+		dbConnect();
+
+		List<String> list = new ArrayList<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		long diff;
+
+
+
+		String sql = "select title, callNumber, dueDate from books b, checkedoutbooks cb where cb.books_id = b.id and cb.patrons_id = ? and dueDate < ?";
+
+		try {
+			PreparedStatement pStmt = con.prepareStatement(sql);
+			pStmt.setInt(1, id);
+			pStmt.setString(2, java.time.LocalDate.now().toString());
+			ResultSet rst = pStmt.executeQuery();
+			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
+			Date secondDate;
+			if(!rst.next())
+				diff = 0;
+			else{
+				secondDate = sdf.parse(rst.getString("dueDate"));
+				diff = secondDate.getTime() - firstDate.getTime();
+			}
+			while (rst.next()) {
+
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + diff);
+			}
+
+		} catch (SQLException | ParseException e) {
+			e.printStackTrace();
+		}
+
+		dbClose();
+		return list;
+	}
+	public List<String> fetchOverdueVideos(int id) {
+
+		dbConnect();
+
+		List<String> list = new ArrayList<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		long diff;
+
+		String sql = "select title, callNumber, dueDate from videos v, checkedoutvideos cv where cv.videos_id = v.id and cv.patrons_id = ? and dueDate < ?";
+
+		try {
+			PreparedStatement pStmt = con.prepareStatement(sql);
+			pStmt.setInt(1, id);
+			pStmt.setString(2, java.time.LocalDate.now().toString());
+			ResultSet rst = pStmt.executeQuery();
+			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
+			Date secondDate;
+			if(!rst.next())
+				diff = 0;
+			else{
+				secondDate = sdf.parse(rst.getString("dueDate"));
+				diff = secondDate.getTime() - firstDate.getTime();
+			}
+
+			while (rst.next()) {
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + diff);
+			}
+
+		} catch (SQLException | ParseException e ) {
+			e.printStackTrace();
+		}
+
 		dbClose();
 		return list;
 	}
