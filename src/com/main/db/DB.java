@@ -5,9 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Date;
+import java.time.LocalDate;
 
 import com.entityClasses.book;
 import com.entityClasses.librarian;
@@ -15,7 +19,6 @@ import com.entityClasses.patron;
 import com.entityClasses.room;
 import com.entityClasses.video;
 import com.entityClasses.checkedOutRoom;
-
 
 public class DB {
 	Connection con;
@@ -146,114 +149,125 @@ public class DB {
 		return list;
 	}
 
-	
-	public List<video> showVideos() {
+	public List<String> fetchCheckedOutBooks(int id) {
+
 		dbConnect();
-		String sql = "select * from librarians";
-		List<video> list = new ArrayList<>();
+
+		List<String> list = new ArrayList<>();
+
+		String sql = "select * from books b, checkedoutbooks cb where cb.books_id = b.id and cb.patrons_id = ?";
+
 		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add(new video(rst.getInt("id"),rst.getString("title"),rst.getString("director"),rst.getString("releaseDate"),rst.getDouble("callNumber"),rst.getString("genre")));
+			PreparedStatement pStmt = con.prepareStatement(sql);
+			pStmt.setInt(1, id);
+			ResultSet rst = pStmt.executeQuery();
+			while (rst.next()) {
+
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Due Date: " + rst.getString("dueDate"));
 			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 		dbClose();
 		return list;
 	}
-	
-	public String insertBook(book temp) {
+
+	public List<String> fetchCheckedOutVideos(int id) {
+
 		dbConnect();
-		String sql = "insert into books (title,author,publisher,callNumber,genre) values (?,?,?,?,?)";
+
+		List<String> list = new ArrayList<>();
+
+		String sql = "select * from videos v, checkedoutvideos cv where cv.videos_id = v.id and cv.patrons_id = ?";
 
 		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, temp.getTitle());
-			pstmt.setString(2, temp.getAuthor());
-			pstmt.setString(3, temp.getPublisher());
-			pstmt.setDouble(4, temp.getCallNumber());
-			pstmt.setString(5, temp.getGenre());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			dbClose();
-			return "Failed to insert Book.";
-		}
-		dbClose();
-		return "Succesfully inserted Book.";
-	}
-	
-	public String insertVideo(video temp) {
-		dbConnect();
-		String sql = "insert into videos (title,director,releaseDate,callNumber,genre) values (?,?,?,?,?)";
+			PreparedStatement pStmt = con.prepareStatement(sql);
+			pStmt.setInt(1, id);
+			ResultSet rst = pStmt.executeQuery();
+			while (rst.next()) {
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Due Date: " + rst.getString("dueDate"));
+			}
 
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, temp.getTitle());
-			pstmt.setString(2, temp.getDirector());
-			pstmt.setString(3, temp.getReleaseDate());
-			pstmt.setDouble(4, temp.getCallNumber());
-			pstmt.setString(5, temp.getGenre());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			dbClose();
-			return "Failed to insert Book.";
-		}
-		dbClose();
-		return "Succesfully inserted Book.";
-	}
-	
-	public String removeBook(int bookRem) {
-		dbConnect();
-		String sql = "delete from books where id=?";
-		PreparedStatement pstmt;
-		try {
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, bookRem);
-			pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			dbClose();
-			return "Failed to remove Book.";
-		}
-		dbClose();
-		return "Successfully removed Book.";
-	}
-	
-	public String removeVideo(int vidRem) {
-		dbConnect();
-		String sql = "delete from videos where id=?";
-		PreparedStatement pstmt;
-		try {
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, vidRem);
-			pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			dbClose();
-			return "Failed to remove Video.";
-		}
-		dbClose();
-		return "Successfully removed Video.";
-	}
-	
-	public void reserveRoom(checkedOutRoom reserve) {
-		dbConnect();
-		String sql = "insert into checkedOutRooms(patrons_id,room_roomNumber,dueDate) "
-				+ "values (?,?,?)";
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, reserve.getPatrons_id());
-			pstmt.setInt(2, reserve.getRooms_roomnumber());
-			pstmt.setString(3, reserve.getDueDate());
-			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 		dbClose();
-		
+		return list;
 	}
 
+	public List<String> fetchOverdueBooks(int id) {
+
+		dbConnect();
+
+		List<String> list = new ArrayList<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		long diff;
+
+
+
+		String sql = "select title, callNumber, dueDate from books b, checkedoutbooks cb where cb.books_id = b.id and cb.patrons_id = ? and dueDate < ?";
+
+		try {
+			PreparedStatement pStmt = con.prepareStatement(sql);
+			pStmt.setInt(1, id);
+			pStmt.setString(2, java.time.LocalDate.now().toString());
+			ResultSet rst = pStmt.executeQuery();
+			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
+			Date secondDate;
+			if(!rst.next())
+				diff = 0;
+			else{
+				secondDate = sdf.parse(rst.getString("dueDate"));
+				diff = secondDate.getTime() - firstDate.getTime();
+			}
+			while (rst.next()) {
+
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + diff);
+			}
+
+		} catch (SQLException | ParseException e) {
+			e.printStackTrace();
+		}
+
+		dbClose();
+		return list;
+	}
+	public List<String> fetchOverdueVideos(int id) {
+
+		dbConnect();
+
+		List<String> list = new ArrayList<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		long diff;
+
+		String sql = "select title, callNumber, dueDate from videos v, checkedoutvideos cv where cv.videos_id = v.id and cv.patrons_id = ? and dueDate < ?";
+
+		try {
+			PreparedStatement pStmt = con.prepareStatement(sql);
+			pStmt.setInt(1, id);
+			pStmt.setString(2, java.time.LocalDate.now().toString());
+			ResultSet rst = pStmt.executeQuery();
+			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
+			Date secondDate;
+			if(!rst.next())
+				diff = 0;
+			else{
+				secondDate = sdf.parse(rst.getString("dueDate"));
+				diff = secondDate.getTime() - firstDate.getTime();
+			}
+
+			while (rst.next()) {
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + diff);
+			}
+
+		} catch (SQLException | ParseException e ) {
+			e.printStackTrace();
+		}
+
+		dbClose();
+		return list;
+	}
 }

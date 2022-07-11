@@ -205,12 +205,14 @@ public class MenuScreen {
 					break;
 				}
 			}
-		} else {
-			// Call switch statement for patron menu
-			while (true) {
+
+		}else {
+			//Call switch statement for patron menu
+			int id;
+			while(true) {
 				System.out.println("------------Patron Login-----------\\r\\n");
 				System.out.println("Enter Id: ");
-				int id = login.nextInt();
+				id = login.nextInt();
 				PatronUtility util = new PatronUtility();
 				boolean isValidId = util.validateId(db.showPatrons(), id);
 				if (!isValidId) {
@@ -228,6 +230,8 @@ public class MenuScreen {
 					}
 				}
 			}
+
+
 			MenuDisplay.patMenuDisplay();
 			while (true) {
 				MenuDisplay.patMenuDisplay();
@@ -245,11 +249,46 @@ public class MenuScreen {
 						System.out.println(r);
 					}
 					break;
-				case 3: // 3. View your checked out books and videos
-					break;
+				case 3: //3. View your checked out books and videos
+					List<String> bookList= db.fetchCheckedOutBooks(id);
+					if(bookList.isEmpty())
+						System.out.println("You have no books checked out");
+					else {
+						System.out.println("Here are your checked out books");
+						for (String s : bookList) {
+							System.out.println(s);
+						}
+					}
+					List<String> videoList = db.fetchCheckedOutVideos(id);
+					if(videoList.isEmpty())
+						System.out.println("You have no videos checked out");
+					else{
+						System.out.println("Here are your checked out videos");
+						for(String s: videoList){
+							System.out.println(s);
+						}
+					}
 				case 4: // 4. Submit book requests
 					break;
-				case 5: // 5. View overdue books and videos
+				case 5: //5. View overdue books and videos
+					List<String> overdueBooks= db.fetchOverdueBooks(id);
+					if(overdueBooks.isEmpty())
+						System.out.println("You have no books overdue");
+					else {
+						System.out.println("Here are your overdue books");
+						for (String s : overdueBooks) {
+							System.out.println(s);
+						}
+					}
+					List<String> overdueVideos= db.fetchOverdueVideos(id);
+					if(overdueVideos.isEmpty())
+						System.out.println("You have no videos overdue");
+					else{
+						System.out.println("Here are your overdue videos");
+						for(String s: overdueVideos){
+							System.out.println(s);
+						}
+					}
 					break;
 				case 6: // 6. Reserve a room
 					List<room> list2 = db.showRooms();
