@@ -1,6 +1,7 @@
 
 package com.main;
 
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,6 +9,7 @@ import com.entityClasses.*;
 import com.main.db.DB;
 import com.main.utility.LibrarianUtility;
 import com.main.utility.PatronUtility;
+import com.main.utility.RoomUtility;
 import com.menuCalls.MenuDisplay;
 
 public class MenuScreen {
@@ -223,6 +225,32 @@ public class MenuScreen {
 				case 5: //5. View overdue books and videos
 					break;
 				case 6: //6. Reserve a room
+					List<room> list2 = db.showRooms();
+					for(room r: list2) {
+						System.out.println(r);
+					}
+					System.out.println("Enter a room number:");
+					int roomId = login.nextInt();
+					RoomUtility util = new RoomUtility();
+					boolean isValidId = util.validateRoomId(db.showRooms(), roomId);
+					if(!isValidId) {
+						System.out.println("Invalid ID, Try Again");
+					}
+					else{
+						System.out.println("Enter Patron ID: ");
+						checkedOutRoom reserve = new checkedOutRoom();
+						int pId = login.nextInt();
+						reserve.setPatrons_id(pId);
+						reserve.setRooms_roomnumber(roomId);
+						long millis=System.currentTimeMillis();  
+				        java.sql.Date date=new java.sql.Date(millis);  
+				        String dueDate = date.toString();
+						reserve.setDueDate(dueDate);
+						db.reserveRoom(reserve);
+						System.out.println("Room Reserved.");
+					}
+					
+					
 					break;
 				default:
 					break;

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.entityClasses.checkedOutRoom;
 import com.entityClasses.librarian;
 import com.entityClasses.patron;
 import com.entityClasses.room;
@@ -86,5 +87,21 @@ public class DB {
 		}
 		dbClose();
 		return list;
+	}
+	public void reserveRoom(checkedOutRoom reserve) {
+		dbConnect();
+		String sql = "insert into checkedOutRooms(patrons_id,room_roomNumber,dueDate) "
+				+ "values (?,?,?)";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, reserve.getPatrons_id());
+			pstmt.setInt(2, reserve.getRooms_roomnumber());
+			pstmt.setString(3, reserve.getDueDate());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		
 	}
 }
