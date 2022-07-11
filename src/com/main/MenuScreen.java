@@ -225,16 +225,17 @@ public class MenuScreen {
 				case 5: //5. View overdue books and videos
 					break;
 				case 6: //6. Reserve a room
-					List<room> list2 = db.showRooms();
-					for(room r: list2) {
-						System.out.println(r);
-					}
+					while(true) {
+					System.out.println("********************************");
+					System.out.println("Available Rooms");
+					System.out.println(db.showFreeRooms());
+					System.out.println("********************************");
 					System.out.println("Enter a room number:");
 					int roomId = login.nextInt();
 					RoomUtility util = new RoomUtility();
-					boolean isValidId = util.validateRoomId(db.showRooms(), roomId);
+					boolean isValidId = util.validateRoomId(db.showFreeRooms(), roomId);
 					if(!isValidId) {
-						System.out.println("Invalid ID, Try Again");
+						System.out.println("Invalid ID or Room Reserved, Try Again");
 					}
 					else{
 						System.out.println("Enter Patron ID: ");
@@ -244,12 +245,13 @@ public class MenuScreen {
 						reserve.setRooms_roomnumber(roomId);
 						long millis=System.currentTimeMillis();  
 				        java.sql.Date date=new java.sql.Date(millis);  
-				        String dueDate = date.toString();
-						reserve.setDueDate(dueDate);
+				        System.out.println(date);
+						reserve.setDueDate(date);
 						db.reserveRoom(reserve);
 						System.out.println("Room Reserved.");
+						break;
 					}
-					
+					}
 					
 					break;
 				default:

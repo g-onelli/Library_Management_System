@@ -18,13 +18,13 @@ public class DB {
 	public void dbConnect() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			System.out.println("Driver loaded...");
+			//System.out.println("Driver loaded...");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_schema","root","Password123");
-			System.out.println("Connection Established...");
+			//System.out.println("Connection Established...");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -32,7 +32,7 @@ public class DB {
 	public void dbClose() {
 		try {
 			con.close();
-			System.out.println("Connection Closed...");
+			//System.out.println("Connection Closed...");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -88,15 +88,34 @@ public class DB {
 		dbClose();
 		return list;
 	}
+	public List<room> showFreeRooms() {
+		dbConnect();
+		String sql = "select roomNumber, capacity, hasPresenterTools " + 
+				"from rooms " + 
+				"where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
+		List<room> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+			
+			while(rst.next()) {	
+				list.add(new room(rst.getInt("roomNumber"),rst.getInt("capacity"),rst.getInt("hasPresenterTools")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	}
 	public void reserveRoom(checkedOutRoom reserve) {
 		dbConnect();
-		String sql = "insert into checkedOutRooms(patrons_id,room_roomNumber,dueDate) "
+		String sql = "insert into checkedOutRooms(patrons_id,rooms_roomNumber,dueDate) "
 				+ "values (?,?,?)";
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, reserve.getPatrons_id());
 			pstmt.setInt(2, reserve.getRooms_roomnumber());
-			pstmt.setString(3, reserve.getDueDate());
+			pstmt.setDate(3, reserve.getDueDate());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
