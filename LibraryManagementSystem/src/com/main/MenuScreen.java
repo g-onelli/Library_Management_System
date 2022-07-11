@@ -7,20 +7,18 @@ public class MenuScreen {
 		Scanner loginChoice = new Scanner(System.in);
 		MenuDisplay.mainMenuDisplay();
 		System.out.println("Please choose an option: ");
+		int loginInput = loginChoice.nextInt();
+		if(loginInput==0) {
+			MenuDisplay.closingProgram();
+			MenuDisplay.exitMessage();
+		}
 		while(true) {
-			int loginInput = loginChoice.nextInt();
-			if(loginInput==0) {
-				MenuDisplay.closingProgram();
-				MenuDisplay.exitMessage();
-				break;
-			}
 			if(loginInput == 1) {
 				//Call switch statement for librarian menu
 			}else {
 				//Call switch statement for patron menu
-				//test comment
 			}
 		}
-		loginChoice.close();
+		
 	}
 }
