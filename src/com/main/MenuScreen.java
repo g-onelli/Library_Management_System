@@ -1,9 +1,14 @@
 
 package com.main;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-import com.entityClasses.*;
+import com.entityClasses.book;
+import com.entityClasses.patron;
+import com.entityClasses.room;
+import com.entityClasses.video;
 import com.main.db.DB;
 import com.main.utility.LibrarianUtility;
 import com.main.utility.PatronUtility;
@@ -125,6 +130,11 @@ public class MenuScreen {
 				case 2:
 					//Room collections -output list of rooms from the database
 					System.out.println("List of schedulable rooms:");
+					List<room> rooms = new ArrayList<>();
+					rooms = db.showRooms();
+					for (room r : rooms) {
+						System.out.println(r.toString());
+					}
 					break;
 				case 3:
 					//View / modify patrons
@@ -137,7 +147,13 @@ public class MenuScreen {
 						}
 						switch(vMP) {
 						case 1:
-							//View all patrons from database
+							//show all patrons
+							List<patron> pats = new ArrayList<>();
+							pats = db.showPatrons();
+							System.out.println("List of Patrons:");
+							for (patron p : pats) {
+								System.out.println(p.toString());
+							}
 							break;
 						case 2:
 							//Register patrons
@@ -146,14 +162,17 @@ public class MenuScreen {
 							String name = loginChoice.nextLine();
 							System.out.println("Enter Card Exp. Date:");
 							String expDate = loginChoice.nextLine();
-							tempPat = new patron(0, name, expDate, 0);
-							//add tempPat to the database
+							System.out.println("Enter Patron Password:");
+							String password = loginChoice.nextLine();
+							tempPat = new patron(0, name, expDate, 0, password);
+							System.out.println(db.insertPatron(tempPat));
 							break;
 						case 3:
 							//Remove Patrons
 							System.out.println("Enter Patron ID to Remove Patron:");
 							int toRem = loginChoice.nextInt();
 							//remove patron from database and return success/fail state
+							System.out.println(db.removePatron(toRem));
 						default:
 							break;
 						}

@@ -11,6 +11,7 @@ import java.util.List;
 import com.entityClasses.book;
 import com.entityClasses.librarian;
 import com.entityClasses.patron;
+import com.entityClasses.room;
 
 public class DB {
 	Connection con;
@@ -81,6 +82,58 @@ public class DB {
 			
 			while(rst.next()) {	
 				list.add(new patron(rst.getInt("id"),rst.getString("name"),rst.getString("cardExpirationDate"),rst.getDouble("balance"),rst.getString("password")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	}
+	
+	public String insertPatron(patron newPatron) {
+		dbConnect();
+		String sql = "insert into patrons (name,cardExpirationDate) values (?,?)";
+
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, newPatron.getName());
+			pstmt.setString(2, newPatron.getCardExpirationDate());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			dbClose();
+			return "Failed to insert Patron.";
+		}
+		dbClose();
+		return "Succesfully inserted Patron.";
+	}
+	
+	public String removePatron(int id) {
+		dbConnect();
+		String sql = "delete from patrons where id=?";
+		PreparedStatement pstmt;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			dbClose();
+			return "Failed to remove Patron.";
+		}
+		dbClose();
+		return "Successfully removed patron.";
+	}
+	
+	public List<room> showRooms() {
+		dbConnect();
+		String sql = "select * from rooms";
+		List<room> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+			
+			while(rst.next()) {	
+				list.add(new room(rst.getInt("roomNumber"),rst.getInt("capacity"),rst.getInt("hasPresenterTools")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
