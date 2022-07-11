@@ -2,10 +2,12 @@
 package com.main;
 
 import java.util.List;
+
 import java.util.Scanner;
 
 import com.entityClasses.*;
 import com.main.db.DB;
+import com.main.utilities.EventsFunctions;
 import com.main.utility.LibrarianUtility;
 import com.main.utility.PatronUtility;
 import com.menuCalls.MenuDisplay;
@@ -130,6 +132,7 @@ public class MenuScreen {
 					for(room r: list) {
 						System.out.println(r);
 					}
+					
 					break;
 				case 3:
 					//View / modify patrons
@@ -164,36 +167,74 @@ public class MenuScreen {
 						}
 					}
 					break;
-<<<<<<< HEAD
-				case 4: //4. Events
-					MenuDisplay.eventMenuDisplay();
-					int eventInput = loginChoice.nextInt();
-					if(eventInput == 1) {
-						//Display events
-					}else if(eventInput ==2) {
-						//edit event
-					}else if(eventInput==3) {
-						//add event
-					}else if(eventInput==4) {
-						//remove event
-					}else {
-						System.out.println("Returning to librarian menu");
-					}
+
 					//Call events 
 					//Gain access to view events
 					//Edit events
 					//
-=======
-				case 4:
->>>>>>> 9d22759ce4a9ac6cd427e017c279ecca372560b8
-					break;
-				case 5:
-					break;
-				case 6:
-					break;
-				default:
-					break;
-				}
+					/*case 4: //4. Events
+					
+					 * 
+					 */
+					case 4:
+						//DB event = new DB();
+						MenuDisplay.eventMenuDisplay();
+						int eventInput = loginChoice.nextInt();
+						if(eventInput == 1) {
+							List<event> eventList = db.fetchEvents();
+							for(event e: eventList) {
+								System.out.println(e);
+							}
+						}else if(eventInput ==2) {
+							/*System.out.println("Please input the event id: ");
+							String eventID = loginChoice.nextLine();
+							System.out.println("Please input the field you would like to alter(date,description,title):");
+							String modField = loginChoice.nextLine();
+							loginChoice.nextLine();
+							System.out.println("Please input the new value for the selected field: ");
+							String modValue = loginChoice.nextLine();
+							System.out.println(" ");
+							*/
+							//System.out.println("1","title","Stevens Writing Contest");
+							db.editEvent("1","title","Stevens Writing Contest");
+							event displayEvent = db.fetchEvent("1");
+							System.out.println(displayEvent);
+						}else if(eventInput==3) {
+							//add event
+							System.out.println("Please input title: ");
+							String title = loginChoice.nextLine();
+							System.out.println("Please input description: ");
+							String description = loginChoice.nextLine();
+							System.out.println("Please input date: ");
+							String date = loginChoice.nextLine();
+							System.out.println("Please input personal id number: ");
+							int libId = loginChoice.nextInt();
+							db.addEvent(date, description, title, libId);
+							
+						}else if(eventInput==4) {
+							//remove event
+							System.out.println("Please input the id value of the event you wish to delete: ");
+							int idNum = loginChoice.nextInt();
+							db.deleteEvent(idNum);
+						}else {
+							System.out.println("Returning to librarian menu");}
+						break;
+					case 5:
+						List<request> reqList=db.checkRequests();
+						for(request r: reqList) {
+							System.out.println(r);
+						}
+						break;
+					case 6:
+						System.out.println("Please input the patron id: ");
+						int libId = loginChoice.nextInt();
+						System.out.println("Please input the new expiration date: ");
+						String exDate = loginChoice.nextLine();
+						db.changeExpirationDate(libId, exDate);
+						break;
+					default:
+						break;
+					}
 			}
 		}else {
 			//Call switch statement for patron menu

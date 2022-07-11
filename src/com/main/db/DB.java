@@ -8,13 +8,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.entityClasses.event;
 import com.entityClasses.librarian;
 import com.entityClasses.patron;
-<<<<<<< HEAD
-//import com.entityClasses.room;
-=======
+import com.entityClasses.request;
 import com.entityClasses.room;
->>>>>>> 9d22759ce4a9ac6cd427e017c279ecca372560b8
+
 
 public class DB {
 	Connection con;
@@ -26,7 +25,7 @@ public class DB {
 			e.printStackTrace();
 		}
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_schema","root","Password123");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_schema","root","092046Dra*fee");
 			System.out.println("Connection Established...");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -91,4 +90,189 @@ public class DB {
 		dbClose();
 		return list;
 	}
+	
+	List<event> eventList = new ArrayList<>();
+	
+	public List<event> fetchEvents(){
+		//DB dbObj = new DB();
+		dbConnect();
+		List<event> eventList = new ArrayList<>();
+		try {
+			String sqlCmd = "select * from events";
+			PreparedStatement cmd = con.prepareStatement(sqlCmd);
+			ResultSet result = cmd.executeQuery();
+			
+			while(result.next()) {
+				//event(id, String date, String description, String title)
+				eventList.add(new event(result.getInt("librarians_id"),//change the id to the actual event id
+						result.getString("date"),result.getString("description"),
+						result.getString("title")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return eventList;
+	}
+	
+	public event fetchEvent(String input) {
+		int idNum = Integer.parseInt(input);
+		//System.out.println(idNum);
+		dbConnect();
+		event oneEvent = new event();
+		String sqlCmd = "select * from events where id=?";
+		try {
+			PreparedStatement cmd = con.prepareStatement(sqlCmd);
+			cmd.setInt(1,idNum);
+			ResultSet result = cmd.executeQuery();
+			result.next();
+			oneEvent = new event(result.getInt("id"),
+					result.getString("date"),
+					result.getString("description"),
+					result.getString("title"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return oneEvent;
+	}
+	
+	public void editEvent(String eventId, String modField, String modValue) {
+		event modEvent = fetchEvent(eventId);
+		String cmdSQL = "update events SET id=?, date=?, description=?, title=?";
+		System.out.println("This is modfield "+modField);
+		System.out.println(modField=="title");
+		try {
+			PreparedStatement cmd = con.prepareStatement(cmdSQL);
+			switch(modField) {
+				case "date":
+					cmd.setInt(1, modEvent.getId());
+					cmd.setString(2, modValue);
+					cmd.setString(3, modEvent.getDescription());
+					cmd.setString(4, modEvent.getTitle());
+					break;
+				case "title":
+					cmd.setInt(1, modEvent.getId());
+					cmd.setString(2, modEvent.getDate());
+					cmd.setString(3, modEvent.getDescription());
+					cmd.setString(4, modValue);
+					break;
+				case "description":
+					cmd.setInt(1, modEvent.getId());
+					cmd.setString(2, modEvent.getDate());
+					cmd.setString(3, modValue);
+					cmd.setString(4, modEvent.getTitle());
+					break;
+				default:
+					System.out.println("That is not a field that is accepted. Please try again.");
+					break;
+			}
+			cmd.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		
+	}
+	public void addEvent(String date, String descrption, String title, int libID) {
+		dbConnect();
+		String cmdSQL = "insert into events(date,description,title,librarians_id) values(?,?,?,?)";
+		try {
+			PreparedStatement cmd = con.prepareStatement(cmdSQL);
+			cmd.setString(1, date);
+			cmd.setString(2, descrption);
+			cmd.setString(3, title);
+			cmd.setInt(4, libID);
+			
+			cmd.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		dbClose();
+		
+	}
+	public void deleteEvent(int id) {
+		dbConnect();
+		String cmdSQL="delete from events where id=?";
+		//int idNum = Integer.parseInt(id);
+		try {
+			PreparedStatement cmd = con.prepareStatement(cmdSQL);
+			cmd.setInt(1,id);
+			cmd.executeUpdate();
+			System.out.println("Your entry has been delete. Have a nice day!");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		dbClose();
+		
+	}
+	
+	public List<request> checkRequests() {
+		dbConnect();
+		List<request> reqList = new ArrayList<>();
+		try {
+			String sqlCmd = "select * from requests";
+			PreparedStatement cmd = con.prepareStatement(sqlCmd);
+			ResultSet result = cmd.executeQuery();
+			
+			while(result.next()) {
+				//public request(int id, String description, String submissionDate, String title)
+				reqList.add(new request(result.getInt("id"),//change the id to the actual event id
+						result.getString("description"),result.getString("submissionDate"),
+						result.getString("title")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return reqList;
+	}
+	
+	public patron fetchPatron(int input) {
+		//int idNum = Integer.parseInt(input);
+		//System.out.println(idNum);
+		dbConnect();
+		patron onePatron = new patron();
+		String sqlCmd = "select * from patrons where id=?";
+		try {
+			PreparedStatement cmd = con.prepareStatement(sqlCmd);
+			cmd.setInt(1,input);
+			ResultSet result = cmd.executeQuery();
+			result.next();
+			// public patron(int id, String name, String cardExpirationDate, double balance, String password)
+			onePatron = new patron(result.getInt("id"),
+					result.getString("name"),
+					result.getString("cardExpirationDate"),
+					result.getDouble("balance"),
+					result.getString("password"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return onePatron;
+	}
+	public void changeExpirationDate(int id, String newDate) {
+		String cmdSQL = "update patrons SET id=?, name=?, cardExpirationDate=?, balance=?, password=?";
+		patron tempPat = fetchPatron(id);
+		if(tempPat != null) {
+			try {
+				PreparedStatement cmd = con.prepareStatement(cmdSQL);
+				cmd.setString(1, tempPat.getName());
+				cmd.setString(2, newDate);
+				cmd.setDouble(3, tempPat.getBalance());
+				cmd.setString(4, tempPat.getPassword());
+				cmd.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			System.out.println("Your card expiration date has been extened to "+newDate);
+		}else {
+			System.out.println("Sorry, we could not find a patron with that id. Please recheck input.");
+		}
+		
+		dbClose();
+	}
+	
 }

@@ -14,7 +14,9 @@ public class patron {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	public patron() {
+		super();
+	}
     public patron(int id, String name, String cardExpirationDate, double balance, String password) {
         super();
         this.id = id;

@@ -1,6 +1,7 @@
 package com.main.utilities;
 
 import com.entityClasses.event;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,14 +10,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.main.db.DB;
+
+
 public class EventsFunctions {
 	Connection con;
+
+
 	String sqlCmd = "select * from events";
 	List<event> eventList = new ArrayList<>();
 	
 	public List<event> fetchEvents(){
+		DB dbObj = new DB();
+		dbObj.dbConnect();
 		List<event> eventList = new ArrayList<>();
 		try {
+			String sqlCmd = "select * from events";
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
 			ResultSet result = cmd.executeQuery();
 			
@@ -29,11 +38,12 @@ public class EventsFunctions {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		dbObj.dbClose();
 		return eventList;
 	}
 	
-	public void editEvent(Scanner input) {
-		
+	public void editEvent(String input) {
+
 	}
 	
 	public void deleteEvent(int id) {
