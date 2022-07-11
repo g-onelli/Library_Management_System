@@ -254,7 +254,7 @@ public class DB {
 		return onePatron;
 	}
 	public void changeExpirationDate(int id, String newDate) {
-		String cmdSQL = "update patrons SET id=?, name=?, cardExpirationDate=?, balance=?, password=?";
+		String cmdSQL = "update patrons SET name=?, cardExpirationDate=?, balance=?, password=?";
 		patron tempPat = fetchPatron(id);
 		if(tempPat != null) {
 			try {

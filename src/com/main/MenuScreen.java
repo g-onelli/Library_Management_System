@@ -177,7 +177,6 @@ public class MenuScreen {
 					 * 
 					 */
 					case 4:
-						//DB event = new DB();
 						MenuDisplay.eventMenuDisplay();
 						int eventInput = loginChoice.nextInt();
 						if(eventInput == 1) {
@@ -186,21 +185,24 @@ public class MenuScreen {
 								System.out.println(e);
 							}
 						}else if(eventInput ==2) {
-							/*System.out.println("Please input the event id: ");
+							System.out.println("Please input the event id: ");
+							loginChoice.nextLine();
 							String eventID = loginChoice.nextLine();
+							
 							System.out.println("Please input the field you would like to alter(date,description,title):");
 							String modField = loginChoice.nextLine();
-							loginChoice.nextLine();
+							
 							System.out.println("Please input the new value for the selected field: ");
 							String modValue = loginChoice.nextLine();
-							System.out.println(" ");
-							*/
-							//System.out.println("1","title","Stevens Writing Contest");
-							db.editEvent("1","title","Stevens Writing Contest");
-							event displayEvent = db.fetchEvent("1");
-							System.out.println(displayEvent);
+							System.out.println("This is the event id: "+eventID+
+									", this is the field to modify: "+modField+
+									", this is the new value for the field: "+modValue);
+							db.editEvent(eventID,modField,modValue);
+							//event displayEvent = db.fetchEvent("1");
+							//System.out.println(displayEvent);
 						}else if(eventInput==3) {
 							//add event
+							loginChoice.nextLine();
 							System.out.println("Please input title: ");
 							String title = loginChoice.nextLine();
 							System.out.println("Please input description: ");
@@ -226,8 +228,10 @@ public class MenuScreen {
 						}
 						break;
 					case 6:
+						loginChoice.nextLine();
 						System.out.println("Please input the patron id: ");
 						int libId = loginChoice.nextInt();
+						loginChoice.nextLine();
 						System.out.println("Please input the new expiration date: ");
 						String exDate = loginChoice.nextLine();
 						db.changeExpirationDate(libId, exDate);
