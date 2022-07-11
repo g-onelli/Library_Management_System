@@ -74,9 +74,19 @@ public class MenuScreen {
 						switch(vid) {
 						case 1:
 							//Display all the books from the database
+							List<book> books = new ArrayList<>();
+							books = db.showBooks();
+							for (book b : books) {
+								System.out.println(b.toString());
+							}
 							break;
 						case 2:
 							//Display all the videos from the database
+							List<video> videos = new ArrayList<>();
+							videos = db.showVideos();
+							for (video v : videos) {
+								System.out.println(v.toString());
+							}
 							break;
 						case 3:
 							//Add Books
@@ -93,6 +103,7 @@ public class MenuScreen {
 							String genere = loginChoice.nextLine();
 							temp = new book(0, title, author, publisher, callNum, genere);
 							//Add book to database using the DB class
+							System.out.println(db.insertBook(temp));
 							break;
 						case 4:
 							//Add Videos
@@ -109,18 +120,21 @@ public class MenuScreen {
 							genere = loginChoice.nextLine();
 							tempVid = new video(0, title, director, release, callNum, genere);
 							// add video to database using db class
+							System.out.println(db.insertVideo(tempVid));
 							break;
 						case 5:
 							//remove books
 							System.out.println("Enter Book ID to Remove:");
 							int bookRem = loginChoice.nextInt();
 							//remove book from database and return success/fail state
+							System.out.println(db.removeBook(bookRem));
 							break;
 						case 6:
 							//remove videos
 							System.out.println("Enter Video ID to Remove:");
 							int vidRem =  loginChoice.nextInt();
 							//remove book from database and return success/fail state
+							System.out.println(db.removeVideo(vidRem));
 							break;
 						default:
 							break;
