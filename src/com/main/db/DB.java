@@ -10,7 +10,11 @@ import java.util.List;
 
 import com.entityClasses.librarian;
 import com.entityClasses.patron;
+<<<<<<< HEAD
 //import com.entityClasses.room;
+=======
+import com.entityClasses.room;
+>>>>>>> 9d22759ce4a9ac6cd427e017c279ecca372560b8
 
 public class DB {
 	Connection con;
