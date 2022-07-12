@@ -270,4 +270,39 @@ public class DB {
 		dbClose();
 		return list;
 	}
+	public List<room> showFreeRooms() {
+		dbConnect();
+		String sql = "select roomNumber, capacity, hasPresenterTools " + 
+				"from rooms " + 
+				"where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
+		List<room> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+			
+			while(rst.next()) {	
+				list.add(new room(rst.getInt("roomNumber"),rst.getInt("capacity"),rst.getInt("hasPresenterTools")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	}
+	public void reserveRoom(checkedOutRoom reserve) {
+		dbConnect();
+		String sql = "insert into checkedOutRooms(patrons_id,rooms_roomNumber,dueDate) "
+				+ "values (?,?,?)";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, reserve.getPatrons_id());
+			pstmt.setInt(2, reserve.getRooms_roomnumber());
+			pstmt.setDate(3, reserve.getDueDate());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		
+	}
 }

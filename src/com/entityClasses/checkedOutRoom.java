@@ -1,13 +1,15 @@
 package com.entityClasses;
 
+import java.sql.Date;
+
 public class checkedOutRoom {
 	private int patrons_id;
 	private int rooms_roomnumber;
-	private String dueDate;
+	private Date dueDate;
 	public checkedOutRoom() {
 		super();
 	}
-	public checkedOutRoom(int patrons_id, int rooms_roomnumber, String dueDate) {
+	public checkedOutRoom(int patrons_id, int rooms_roomnumber, Date dueDate) {
 		super();
 		this.patrons_id = patrons_id;
 		this.rooms_roomnumber = rooms_roomnumber;
@@ -30,10 +32,10 @@ public class checkedOutRoom {
 	public void setRooms_roomnumber(int rooms_roomnumber) {
 		this.rooms_roomnumber = rooms_roomnumber;
 	}
-	public String getDueDate() {
+	public Date getDueDate() {
 		return dueDate;
 	}
-	public void setDueDate(String dueDate) {
-		this.dueDate = dueDate;
+	public void setDueDate(Date date) {
+		this.dueDate = date;
 	}
 }

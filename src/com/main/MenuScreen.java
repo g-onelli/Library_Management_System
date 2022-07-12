@@ -245,7 +245,7 @@ public class MenuScreen {
 					break;
 				case 2: // 2. View room collections
 					List<room> list = db.showRooms();
-					for (room r : list) {
+					for(room r: list) {
 						System.out.println(r);
 					}
 					break;
@@ -291,29 +291,33 @@ public class MenuScreen {
 					}
 					break;
 				case 6: // 6. Reserve a room
-					List<room> list2 = db.showRooms();
-					for (room r : list2) {
-						System.out.println(r);
-					}
-					System.out.println("Enter a room number:");
-					int roomId = login.nextInt();
-					RoomUtility util = new RoomUtility();
-					boolean isValidId = util.validateRoomId(db.showRooms(), roomId);
-					if (!isValidId) {
-						System.out.println("Invalid ID, Try Again");
-					} else {
-						System.out.println("Enter Patron ID: ");
-						checkedOutRoom reserve = new checkedOutRoom();
-						int pId = login.nextInt();
-						reserve.setPatrons_id(pId);
-						reserve.setRooms_roomnumber(roomId);
-						long millis = System.currentTimeMillis();
-						java.sql.Date date = new java.sql.Date(millis);
-						String dueDate = date.toString();
-						reserve.setDueDate(dueDate);
-						db.reserveRoom(reserve);
-						System.out.println("Room Reserved.");
-					}
+					while(true) {
+						System.out.println("********************************");
+						System.out.println("Available Rooms");
+						System.out.println(db.showFreeRooms());
+						System.out.println("********************************");
+						System.out.println("Enter a room number:");
+						int roomId = login.nextInt();
+						RoomUtility util = new RoomUtility();
+						boolean isValidId = util.validateRoomId(db.showFreeRooms(), roomId);
+						if(!isValidId) {
+							System.out.println("Invalid ID or Room Reserved, Try Again");
+						}
+						else{
+							System.out.println("Enter Patron ID: ");
+							checkedOutRoom reserve = new checkedOutRoom();
+							int pId = login.nextInt();
+							reserve.setPatrons_id(pId);
+							reserve.setRooms_roomnumber(roomId);
+							long millis=System.currentTimeMillis();  
+					        java.sql.Date date=new java.sql.Date(millis);  
+					        System.out.println(date);
+							reserve.setDueDate(date);
+							db.reserveRoom(reserve);
+							System.out.println("Room Reserved.");
+							break;
+						}
+						}
 
 					break;
 				default:
