@@ -64,7 +64,7 @@ public class DB {
 	}
 	public List<book> showBooks() {
 		dbConnect();
-		String sql = "select * from librarians";
+		String sql = "select * from books";
 		List<book> list = new ArrayList<>();
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
@@ -274,7 +274,7 @@ public class DB {
 
 		List<String> list = new ArrayList<>();
 
-		String sql = "select * from videos v, checkedoutvideos cv where cv.videos_id = v.id and cv.patrons_id = ?";
+		String sql = "select * from videos v, checkoutvideos cv where cv.videos_id = v.id and cv.patrons_id = ?";
 
 		try {
 			PreparedStatement pStmt = con.prepareStatement(sql);

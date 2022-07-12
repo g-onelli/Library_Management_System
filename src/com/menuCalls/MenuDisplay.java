@@ -77,4 +77,13 @@ public class MenuDisplay {
 				"Have a great day.";
 		System.out.println(exitResponse);
 	}
+	public static void viewVideoBooksPat() {
+		String vidmenu = "——Video and Book Collections—----\r\n" + 
+				"1. View Books\r\n" + 
+				"2. View Videos\r\n" + 
+				"0. To Exit\r\n" + 
+				"—-----------------------------------------------\r\n" + 
+				"";
+		System.out.println(vidmenu);
+	}
 }

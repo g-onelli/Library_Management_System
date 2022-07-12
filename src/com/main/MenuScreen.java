@@ -245,6 +245,34 @@ public class MenuScreen {
 				}
 				switch (patronInput) {
 				case 1: // 1. View video and book collections
+					while(true) {
+						MenuDisplay.viewVideoBooksPat();
+						patronInput = loginChoice.nextInt();
+						if (patronInput == 0) {
+							System.out.println("Exiting.. Bye");
+							break;
+						}
+						switch(patronInput) {
+						case 1:
+							// Display all the books from the database
+							List<book> books = new ArrayList<>();
+							books = db.showBooks();
+							for (book b : books) {
+								System.out.println(b.toString());
+							}
+							break;
+						case 2:
+							// Display all the videos from the database
+							List<video> videos = new ArrayList<>();
+							videos = db.showVideos();
+							for (video v : videos) {
+								System.out.println(v.toString());
+							}
+							break;
+						default:
+							break;
+						}
+					}
 					break;
 				case 2: // 2. View room collections
 					List<room> list = db.showRooms();
