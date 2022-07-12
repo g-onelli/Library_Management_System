@@ -1,5 +1,5 @@
-
 package com.main;
+<<<<<<< HEAD
 
 import java.util.ArrayList;
 
@@ -15,16 +15,17 @@ import com.main.db.DB;
 import com.main.utility.LibrarianUtility;
 import com.main.utility.PatronUtility;
 import com.main.utility.RoomUtility;
-import com.menuCalls.MenuDisplay;
+=======
+import java.util.Scanner;
 
+>>>>>>> 15be96c1a65047494846d5b1a1c526428a6ec1a6
+import com.menuCalls.MenuDisplay;
 public class MenuScreen {
 	public static void main(String[] args) {
-		DB db = new DB();
-		db.dbConnect();
 		Scanner loginChoice = new Scanner(System.in);
-		Scanner login = new Scanner(System.in);
 		MenuDisplay.mainMenuDisplay();
 		System.out.println("Please choose an option: ");
+<<<<<<< HEAD
 		int loginInput = loginChoice.nextInt();
 		if (loginInput == 0) {
 			MenuDisplay.closingProgram();
@@ -284,5 +285,22 @@ public class MenuScreen {
 				}
 			}
 		}
+=======
+		while(true) {
+			int loginInput = loginChoice.nextInt();
+			if(loginInput==0) {
+				MenuDisplay.closingProgram();
+				MenuDisplay.exitMessage();
+				break;
+			}
+			if(loginInput == 1) {
+				//Call switch statement for librarian menu
+			}else {
+				//Call switch statement for patron menu
+				//test comment
+			}
+		}
+		loginChoice.close();
+>>>>>>> 15be96c1a65047494846d5b1a1c526428a6ec1a6
 	}
 }
