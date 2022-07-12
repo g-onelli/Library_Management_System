@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import com.entityClasses.book;
 import com.entityClasses.librarian;
 import com.entityClasses.patron;
+import com.entityClasses.request;
 import com.entityClasses.room;
 import com.entityClasses.video;
 import com.entityClasses.checkedOutRoom;
@@ -298,6 +299,24 @@ public class DB {
 			pstmt.setInt(1, reserve.getPatrons_id());
 			pstmt.setInt(2, reserve.getRooms_roomnumber());
 			pstmt.setDate(3, reserve.getDueDate());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		
+	}
+	public void requestBook(request bookRequest, int id) {
+		dbConnect();
+		String sql = "insert into requests(description,submissionDate,title,patrons_id,author) "
+				+ "values (?,?,?,?,?)";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, bookRequest.getDescription());
+			pstmt.setDate(2, bookRequest.getSubmissionDate());
+			pstmt.setString(3, bookRequest.getTitle());
+			pstmt.setInt(4, id);
+			pstmt.setString(5, bookRequest.getAuthor());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
