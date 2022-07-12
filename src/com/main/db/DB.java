@@ -63,7 +63,7 @@ public class DB {
 	}
 	public List<book> showBooks() {
 		dbConnect();
-		String sql = "select * from librarians";
+		String sql = "select * from books";
 		List<book> list = new ArrayList<>();
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
@@ -99,12 +99,14 @@ public class DB {
 	
 	public String insertPatron(patron newPatron) {
 		dbConnect();
-		String sql = "insert into patrons (name,cardExpirationDate) values (?,?)";
+		String sql = "insert into patrons (name,cardExpirationDate,balance,password) values (?,??,?)";
 
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, newPatron.getName());
 			pstmt.setString(2, newPatron.getCardExpirationDate());
+			pstmt.setDouble(3, newPatron.getBalance());
+			pstmt.setString(4, newPatron.getPassword());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			dbClose();
@@ -202,10 +204,10 @@ public class DB {
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			dbClose();
-			return "Failed to insert Book.";
+			return "Failed to insert Video.";
 		}
 		dbClose();
-		return "Succesfully inserted Book.";
+		return "Succesfully inserted Video.";
 	}
 	
 	public String removeBook(int bookRem) {
