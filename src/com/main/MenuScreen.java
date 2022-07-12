@@ -64,10 +64,10 @@ public class MenuScreen {
 				// Call switch statement for librarian menu
 				switch (librarianInput) {
 				case 1:
-					// MenuDisplay.viewVideoBooks();
+					MenuDisplay.viewVideoBooks();
 					int vid = loginChoice.nextInt();
 					while (true) {
-						if (librarianInput == 0) {
+						if (vid == 0) {
 							System.out.println("Exiting.. Bye");
 							break;
 						}
@@ -79,6 +79,7 @@ public class MenuScreen {
 							for (book b : books) {
 								System.out.println(b.toString());
 							}
+							loginChoice.nextLine();
 							break;
 						case 2:
 							// Display all the videos from the database
@@ -139,6 +140,7 @@ public class MenuScreen {
 						default:
 							break;
 						}
+						break;
 					}
 					break;
 				case 2:

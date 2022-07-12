@@ -60,7 +60,7 @@ public class DB {
 	}
 	public List<book> showBooks() {
 		dbConnect();
-		String sql = "select * from librarians";
+		String sql = "select * from books";
 		List<book> list = new ArrayList<>();
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
@@ -149,7 +149,7 @@ public class DB {
 	
 	public List<video> showVideos() {
 		dbConnect();
-		String sql = "select * from librarians";
+		String sql = "select * from videos";
 		List<video> list = new ArrayList<>();
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
