@@ -149,6 +149,99 @@ public class DB {
 		return list;
 	}
 
+
+	public List<video> showVideos() {
+		dbConnect();
+		String sql = "select * from videos";
+		List<video> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+			
+			while(rst.next()) {	
+				list.add(new video(rst.getInt("id"),rst.getString("title"),rst.getString("director"),rst.getString("releaseDate"),rst.getDouble("callNumber"),rst.getString("genre")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	}
+	
+	public String insertBook(book temp) {
+		dbConnect();
+		String sql = "insert into books (title,author,publisher,callNumber,genre) values (?,?,?,?,?)";
+
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, temp.getTitle());
+			pstmt.setString(2, temp.getAuthor());
+			pstmt.setString(3, temp.getPublisher());
+			pstmt.setDouble(4, temp.getCallNumber());
+			pstmt.setString(5, temp.getGenre());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			dbClose();
+			return "Failed to insert Book.";
+		}
+		dbClose();
+		return "Succesfully inserted Book.";
+	}
+	
+	public String insertVideo(video temp) {
+		dbConnect();
+		String sql = "insert into videos (title,director,releaseDate,callNumber,genre) values (?,?,?,?,?)";
+
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, temp.getTitle());
+			pstmt.setString(2, temp.getDirector());
+			pstmt.setString(3, temp.getReleaseDate());
+			pstmt.setDouble(4, temp.getCallNumber());
+			pstmt.setString(5, temp.getGenre());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			dbClose();
+			return "Failed to insert Book.";
+		}
+		dbClose();
+		return "Succesfully inserted Book.";
+	}
+	
+	public String removeBook(int bookRem) {
+		dbConnect();
+		String sql = "delete from books where id=?";
+		PreparedStatement pstmt;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, bookRem);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			dbClose();
+			return "Failed to remove Book.";
+		}
+		dbClose();
+		return "Successfully removed Book.";
+	}
+	
+	public String removeVideo(int vidRem) {
+		dbConnect();
+		String sql = "delete from videos where id=?";
+		PreparedStatement pstmt;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, vidRem);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			dbClose();
+			return "Failed to remove Video.";
+		}
+		dbClose();
+		return "Successfully removed Video.";
+	}
+	
 	public List<String> fetchCheckedOutBooks(int id) {
 
 		dbConnect();
