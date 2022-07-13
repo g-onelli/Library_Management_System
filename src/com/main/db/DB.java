@@ -100,12 +100,14 @@ public class DB {
 	
 	public String insertPatron(patron newPatron) {
 		dbConnect();
-		String sql = "insert into patrons (name,cardExpirationDate) values (?,?)";
+		String sql = "insert into patrons (name,cardExpirationDate,balance,password) values (?,?,?,?)";
 
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, newPatron.getName());
 			pstmt.setString(2, newPatron.getCardExpirationDate());
+			pstmt.setDouble(3, newPatron.getBalance());
+			pstmt.setString(4, newPatron.getPassword());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			dbClose();
@@ -122,6 +124,7 @@ public class DB {
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, id);
+			System.out.println(pstmt);
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -203,10 +206,10 @@ public class DB {
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			dbClose();
-			return "Failed to insert Book.";
+			return "Failed to insert Video.";
 		}
 		dbClose();
-		return "Succesfully inserted Book.";
+		return "Succesfully inserted Video.";
 	}
 	
 	public String removeBook(int bookRem) {

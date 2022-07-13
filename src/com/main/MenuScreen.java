@@ -66,10 +66,11 @@ public class MenuScreen {
 				// Call switch statement for librarian menu
 				switch (librarianInput) {
 				case 1:
-					// MenuDisplay.viewVideoBooks();
-					int vid = loginChoice.nextInt();
+					
 					while (true) {
-						if (librarianInput == 0) {
+						MenuDisplay.viewVideoBooks();
+						int vid = loginChoice.nextInt();
+						if (vid == 0) {
 							System.out.println("Exiting.. Bye");
 							break;
 						}
@@ -94,6 +95,7 @@ public class MenuScreen {
 							// Add Books
 							book temp;
 							System.out.println("Enter Book Title:");
+							loginChoice.nextLine();
 							String title = loginChoice.nextLine();
 							System.out.println("Enter Book Author:");
 							String author = loginChoice.nextLine();
@@ -102,6 +104,7 @@ public class MenuScreen {
 							System.out.println("Enter Book Call Number:");
 							double callNum = loginChoice.nextDouble();
 							System.out.println("Enter Book Genere:");
+							loginChoice.nextLine();
 							String genere = loginChoice.nextLine();
 							temp = new book(0, title, author, publisher, callNum, genere);
 							// Add book to database using the DB class
@@ -111,6 +114,7 @@ public class MenuScreen {
 							// Add Videos
 							video tempVid;
 							System.out.println("Enter Video Title:");
+							loginChoice.nextLine();
 							title = loginChoice.nextLine();
 							System.out.println("Enter Video Director:");
 							String director = loginChoice.nextLine();
@@ -119,6 +123,7 @@ public class MenuScreen {
 							System.out.println("Enter Video Call Number:");
 							callNum = loginChoice.nextDouble();
 							System.out.println("Enter Video Genere:");
+							loginChoice.nextLine();
 							genere = loginChoice.nextLine();
 							tempVid = new video(0, title, director, release, callNum, genere);
 							// add video to database using db class
@@ -155,10 +160,10 @@ public class MenuScreen {
 					break;
 				case 3:
 					// View / modify patrons
-					// MenuDisplay.viewModifyPatrons();
-					int vMP = loginChoice.nextInt();
 					while (true) {
-						if (librarianInput == 0) {
+						MenuDisplay.viewModifyPatrons();
+						int vMP = loginChoice.nextInt();
+						if (vMP == 0) {
 							System.out.println("Exiting.. Bye");
 							break;
 						}
@@ -176,6 +181,7 @@ public class MenuScreen {
 							// Register patrons
 							patron tempPat;
 							System.out.println("Enter Patron Name:");
+							loginChoice.nextLine();
 							String name = loginChoice.nextLine();
 							System.out.println("Enter Card Exp. Date:");
 							String expDate = loginChoice.nextLine();
@@ -183,12 +189,12 @@ public class MenuScreen {
 							String password = loginChoice.nextLine();
 							tempPat = new patron(0, name, expDate, 0, password);
 							System.out.println(db.insertPatron(tempPat));
-							// tempPat = new patron(0, name, expDate, 0);
 							// add tempPat to the database
 							break;
 						case 3:
 							// Remove Patrons
 							System.out.println("Enter Patron ID to Remove Patron:");
+							loginChoice.nextLine();
 							int toRem = loginChoice.nextInt();
 							// remove patron from database and return success/fail state
 							System.out.println(db.removePatron(toRem));
