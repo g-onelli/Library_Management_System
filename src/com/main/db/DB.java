@@ -99,7 +99,7 @@ public class DB {
 	
 	public String insertPatron(patron newPatron) {
 		dbConnect();
-		String sql = "insert into patrons (name,cardExpirationDate,balance,password) values (?,??,?)";
+		String sql = "insert into patrons (name,cardExpirationDate,balance,password) values (?,?,?,?)";
 
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
@@ -123,6 +123,7 @@ public class DB {
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, id);
+			System.out.println(pstmt);
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {

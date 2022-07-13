@@ -161,7 +161,7 @@ public class MenuScreen {
 					while (true) {
 						MenuDisplay.viewModifyPatrons();
 						int vMP = loginChoice.nextInt();
-						if (librarianInput == 0) {
+						if (vMP == 0) {
 							System.out.println("Exiting.. Bye");
 							break;
 						}
