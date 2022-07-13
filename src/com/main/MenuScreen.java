@@ -340,12 +340,15 @@ public class MenuScreen {
 					while(true) {
 						System.out.println("********************************");
 						System.out.println("Available Rooms");
-						System.out.println(db.showFreeRooms());
+						List<String> roomList = db.showFreeRooms();
+						for(String s: roomList){
+							System.out.println(s);
+						}
 						System.out.println("********************************");
 						System.out.println("Enter a room number:");
 						int roomId = login.nextInt();
 						RoomUtility util = new RoomUtility();
-						boolean isValidId = util.validateRoomId(db.showFreeRooms(), roomId);
+						boolean isValidId = util.validateRoomId(db.checkFreeRooms(), roomId);
 						if(!isValidId) {
 							System.out.println("Invalid ID or Room Reserved, Try Again");
 						}

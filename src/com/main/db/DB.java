@@ -364,7 +364,27 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	public List<room> showFreeRooms() {
+	public List<String> showFreeRooms() {
+		dbConnect();
+		String sql = "select roomNumber, capacity, hasPresenterTools " + 
+				"from rooms " + 
+				"where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
+		List<String> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+			
+			while(rst.next()) {	
+				list.add("Room Number: " + rst.getInt("roomNumber") + ", " + "Capacity: " + rst.getInt("capacity") + ", PresenterTools: " + rst.getInt("hasPresenterTools"));						
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	}
+	public List<room> checkFreeRooms() {
 		dbConnect();
 		String sql = "select roomNumber, capacity, hasPresenterTools " + 
 				"from rooms " + 
@@ -376,7 +396,9 @@ public class DB {
 			
 			while(rst.next()) {	
 				list.add(new room(rst.getInt("roomNumber"),rst.getInt("capacity"),rst.getInt("hasPresenterTools")));
+				
 			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
