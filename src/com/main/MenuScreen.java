@@ -9,6 +9,7 @@ import java.util.Scanner;
 import com.entityClasses.book;
 import com.entityClasses.checkedOutRoom;
 import com.entityClasses.patron;
+import com.entityClasses.request;
 import com.entityClasses.room;
 import com.entityClasses.video;
 import com.main.db.DB;
@@ -24,6 +25,7 @@ public class MenuScreen {
 		Scanner loginChoice = new Scanner(System.in);
 		Scanner login = new Scanner(System.in);
 		MenuDisplay.mainMenuDisplay();
+		int patron_id;
 		System.out.println("Please choose an option: ");
 		int loginInput = loginChoice.nextInt();
 		if (loginInput == 0) {
@@ -232,6 +234,7 @@ public class MenuScreen {
 						System.out.println("Invalid Password, Try Again");
 					} else {
 						System.out.println("Login Sucessful...");
+						patron_id = id;
 						break;
 					}
 				}
@@ -248,6 +251,34 @@ public class MenuScreen {
 				}
 				switch (patronInput) {
 				case 1: // 1. View video and book collections
+					while(true) {
+						MenuDisplay.viewVideoBooksPat();
+						patronInput = loginChoice.nextInt();
+						if (patronInput == 0) {
+							System.out.println("Exiting.. Bye");
+							break;
+						}
+						switch(patronInput) {
+						case 1:
+							// Display all the books from the database
+							List<book> books = new ArrayList<>();
+							books = db.showBooks();
+							for (book b : books) {
+								System.out.println(b.toString());
+							}
+							break;
+						case 2:
+							// Display all the videos from the database
+							List<video> videos = new ArrayList<>();
+							videos = db.showVideos();
+							for (video v : videos) {
+								System.out.println(v.toString());
+							}
+							break;
+						default:
+							break;
+						}
+					}
 					break;
 				case 2: // 2. View room collections
 					List<room> list = db.showRooms();
@@ -275,6 +306,21 @@ public class MenuScreen {
 						}
 					}
 				case 4: // 4. Submit book requests
+					request request = new request();
+					System.out.println("Enter Book Title");
+					String name = login.nextLine();
+					System.out.println("Enter Book Author");
+					String author = login.nextLine();
+					System.out.println("Enter Book Description");
+					String desc = login.nextLine();
+					long millis=System.currentTimeMillis();  
+			        java.sql.Date date=new java.sql.Date(millis);
+					request.setTitle(name);
+					request.setAuthor(author);
+					request.setDescription(desc);
+					request.setSubmissionDate(date);
+					db.requestBook(request, patron_id);
+					System.out.println("Book requested!");
 					break;
 				case 5: //5. View overdue books and videos
 					List<String> overdueBooks= db.fetchOverdueBooks(id);
@@ -310,15 +356,12 @@ public class MenuScreen {
 							System.out.println("Invalid ID or Room Reserved, Try Again");
 						}
 						else{
-							System.out.println("Enter Patron ID: ");
 							checkedOutRoom reserve = new checkedOutRoom();
-							int pId = login.nextInt();
-							reserve.setPatrons_id(pId);
+							reserve.setPatrons_id(patron_id);
 							reserve.setRooms_roomnumber(roomId);
-							long millis=System.currentTimeMillis();  
-					        java.sql.Date date=new java.sql.Date(millis);  
-					        System.out.println(date);
-							reserve.setDueDate(date);
+							long millis2=System.currentTimeMillis();  
+					        java.sql.Date date2=new java.sql.Date(millis2); 
+							reserve.setDueDate(date2);
 							db.reserveRoom(reserve);
 							System.out.println("Room Reserved.");
 							break;

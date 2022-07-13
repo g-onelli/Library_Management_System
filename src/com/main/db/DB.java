@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import com.entityClasses.book;
 import com.entityClasses.librarian;
 import com.entityClasses.patron;
+import com.entityClasses.request;
 import com.entityClasses.room;
 import com.entityClasses.video;
 import com.entityClasses.checkedOutRoom;
@@ -25,13 +26,13 @@ public class DB {
 	public void dbConnect() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			System.out.println("Driver loaded...");
+			//System.out.println("Driver loaded...");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_schema","root","Password123");
-			System.out.println("Connection Established...");
+			//System.out.println("Connection Established...");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -39,7 +40,7 @@ public class DB {
 	public void dbClose() {
 		try {
 			con.close();
-			System.out.println("Connection Closed...");
+			//System.out.println("Connection Closed...");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -394,6 +395,24 @@ public class DB {
 			pstmt.setInt(1, reserve.getPatrons_id());
 			pstmt.setInt(2, reserve.getRooms_roomnumber());
 			pstmt.setDate(3, reserve.getDueDate());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		
+	}
+	public void requestBook(request bookRequest, int id) {
+		dbConnect();
+		String sql = "insert into requests(description,submissionDate,title,patrons_id,author) "
+				+ "values (?,?,?,?,?)";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, bookRequest.getDescription());
+			pstmt.setDate(2, bookRequest.getSubmissionDate());
+			pstmt.setString(3, bookRequest.getTitle());
+			pstmt.setInt(4, id);
+			pstmt.setString(5, bookRequest.getAuthor());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
