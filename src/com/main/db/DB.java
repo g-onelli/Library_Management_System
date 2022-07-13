@@ -274,7 +274,7 @@ public class DB {
 
 		List<String> list = new ArrayList<>();
 
-		String sql = "select * from videos v, checkoutvideos cv where cv.videos_id = v.id and cv.patrons_id = ?";
+		String sql = "select * from videos v, checkedoutvideos cv where cv.videos_id = v.id and cv.patrons_id = ?";
 
 		try {
 			PreparedStatement pStmt = con.prepareStatement(sql);
