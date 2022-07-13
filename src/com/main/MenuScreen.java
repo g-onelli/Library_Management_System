@@ -152,10 +152,9 @@ public class MenuScreen {
 					// Room collections -output list of rooms from the database
 					System.out.println("List of schedulable rooms:");
 
-					List<room> rooms = new ArrayList<>();
-					rooms = db.showRooms();
-					for (room r : rooms) {
-						System.out.println(r.toString());
+					List<String> list = db.showRooms();
+					for (String r : list) {
+						System.out.println(r);
 					}
 					break;
 				case 3:
@@ -281,8 +280,10 @@ public class MenuScreen {
 					}
 					break;
 				case 2: // 2. View room collections
-					List<room> list = db.showRooms();
-					for(room r: list) {
+					
+					System.out.println("List of schedulable rooms:");
+					List<String> list = db.showRooms();
+					for(String r: list) {
 						System.out.println(r);
 					}
 					break;

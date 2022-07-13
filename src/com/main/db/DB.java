@@ -135,16 +135,16 @@ public class DB {
 		return "Successfully removed patron.";
 	}
 
-	public List<room> showRooms() {
+	public List<String> showRooms() {
 		dbConnect();
 		String sql = "select * from rooms";
-		List<room> list = new ArrayList<>();
+		List<String> list = new ArrayList<>();
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			ResultSet rst = pstmt.executeQuery();
 			
 			while(rst.next()) {	
-				list.add(new room(rst.getInt("roomNumber"),rst.getInt("capacity"),rst.getInt("hasPresenterTools")));
+				list.add("Room Number: " + rst.getInt("roomNumber") + ", " + "Capacity: " + rst.getInt("capacity") + ", PresenterTools: " + rst.getInt("hasPresenterTools"));						
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
