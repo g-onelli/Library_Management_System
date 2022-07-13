@@ -350,10 +350,8 @@ public class MenuScreen {
 							System.out.println("Invalid ID or Room Reserved, Try Again");
 						}
 						else{
-							System.out.println("Enter Patron ID: ");
 							checkedOutRoom reserve = new checkedOutRoom();
-							int pId = login.nextInt();
-							reserve.setPatrons_id(pId);
+							reserve.setPatrons_id(patron_id);
 							reserve.setRooms_roomnumber(roomId);
 							long millis2=System.currentTimeMillis();  
 					        java.sql.Date date2=new java.sql.Date(millis2); 
