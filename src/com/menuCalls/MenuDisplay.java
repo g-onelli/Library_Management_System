@@ -49,6 +49,8 @@ public class MenuDisplay {
 				"4. Add Video\r\n" +
 				"5. Remove Book\r\n" +
 				"6. Remove Video\r\n" +
+				"7. Search for Books\r\n" +
+				"8. Search for Videos\r\n" +
 				"0. To Exit\r\n" + 
 				"—-----------------------------------------------\r\n" + 
 				"";
@@ -76,6 +78,26 @@ public class MenuDisplay {
 				+ "—-----------------------------------------------\r\n"
 				+ "";
 		System.out.println(patMenu);
+	}
+	
+	public static void searchBooksDisplay() {
+		String srMenu = "------Please Enter Tag to Search By------\r\n"
+					+   "Title, Author, Publisher, or Genre\r\n"
+					+   "-----------------------------------------\r\n";
+		System.out.println(srMenu);
+		
+	}
+	public static void searchVideosDisplay() {
+		String srMenu = "------Please Enter Tag to Search By------\r\n"
+					+   "Title, Director, or Genre\r\n"
+					+   "-----------------------------------------\r\n";
+		System.out.println(srMenu);
+		
+	}
+	
+	public static void searchTermDisplay() {
+		String termMenu = "-------Enter Term to Search For--------\r\n";
+		System.out.println(termMenu);
 	}
 	
 	public static void closingProgram() {
