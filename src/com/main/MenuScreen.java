@@ -203,14 +203,68 @@ public class MenuScreen {
 					}
 					break;
 				case 4:
-					break;
-				case 5:
-					break;
-				case 6:
-					break;
-				default:
-					break;
-				}
+						MenuDisplay.eventMenuDisplay();
+						int eventInput = loginChoice.nextInt();
+						
+						switch(eventInput) {
+							case 1:
+								List<event> eventList = db.fetchEvents();
+								for(event e: eventList) {
+									System.out.println(e);
+								}
+								break;
+							case 2:
+								System.out.println("Please input the event id: ");
+								loginChoice.nextLine();
+								String eventID = loginChoice.nextLine();
+								
+								System.out.println("Please input the field you would like to alter(date,description,title):");
+								String modField = loginChoice.nextLine();
+								
+								System.out.println("Please input the new value for the selected field: ");
+								String modValue = loginChoice.nextLine();
+								db.editEvent(eventID,modField,modValue);
+								break;
+							case 3:
+								loginChoice.nextLine();
+								System.out.println("Please input title: ");
+								String title = loginChoice.nextLine();
+								System.out.println("Please input description: ");
+								String description = loginChoice.nextLine();
+								System.out.println("Please input date: ");
+								String date = loginChoice.nextLine();
+								System.out.println("Please input personal id number: ");
+								int libId = loginChoice.nextInt();
+								db.addEvent(date, description, title, libId);
+								break;
+							case 4:
+								System.out.println("Please input the id value of the event you wish to delete: ");
+								int idNum = loginChoice.nextInt();
+								db.deleteEvent(idNum);
+								break;
+							default:
+								System.out.println("Returning to librarian menu");
+								break;
+						}
+						break;
+					case 5:
+						List<request> reqList=db.checkRequests();
+						for(request r: reqList) {
+							System.out.println(r);
+						}
+						break;
+					case 6:
+						loginChoice.nextLine();
+						System.out.println("Please input the patron id: ");
+						int libId = loginChoice.nextInt();
+						loginChoice.nextLine();
+						System.out.println("Please input the new expiration date: ");
+						String exDate = loginChoice.nextLine();
+						db.changeExpirationDate(libId, exDate);
+						break;
+					default:
+						break;
+					}
 			}
 
 		}else {
