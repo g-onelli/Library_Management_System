@@ -24,6 +24,10 @@ public class patron {
         this.password = password;
     }
 
+    public patron(){
+        super();
+    }
+
 
 	public int getId() {
         return id;

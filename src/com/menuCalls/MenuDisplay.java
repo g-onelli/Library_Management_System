@@ -1,6 +1,13 @@
 package com.menuCalls;
 
+import com.entityClasses.librarian;
+import com.entityClasses.patron;
+import com.main.db.DB;
+
 public class MenuDisplay {
+	DB db = new DB();
+	patron p;
+	librarian l;
 	public static void mainMenuDisplay() {
 		String mainMenu = "—--------Library Management—--------\r\n"
 				+ "1. Librarian Login\r\n"
@@ -13,7 +20,7 @@ public class MenuDisplay {
 	
 	public static void libMenuDisplay() {
 		String libMenu = "—------------Librarian Menu—-----------\r\n"
-				+ "Welcome, username!\r\n"
+				+ "Welcome!\r\n"
 				+ "1. View video and book collections\r\n"
 				+ "2. View room collections\r\n"
 				+ "3. View/Modify Patrons\r\n"
@@ -28,13 +35,15 @@ public class MenuDisplay {
 	
 	public static void patMenuDisplay() {
 		String patMenu = "—------------Patron Menu—-----------\r\n"
-				+ "Welcome, username!\r\n"
+				+ "Welcome! \r\n"
 				+ "1. View video and book collections\r\n"
 				+ "2. View room collections\r\n"
 				+ "3. View your checked out books and videos\r\n"
 				+ "4. Submit book requests\r\n"
 				+ "5. View overdue books and videos\r\n"
 				+ "6. Reserve a room\r\n"
+				+ "7. Check in a book or video\r\n"
+				+ "8. Checkout a book or video\r\n"
 				+ "0. To Exit\r\n"
 				+ "—-----------------------------------------------\r\n"
 				+ "";
