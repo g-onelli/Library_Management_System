@@ -66,6 +66,18 @@ public class MenuDisplay {
 		System.out.println(vModPat);
 	}
 	
+	public static void eventMenuDisplay() {
+		String patMenu = "—------------Event Menu—-----------\r\n"
+				+ "1. View event schedule\r\n"
+				+ "2. Edit event\r\n"
+				+ "3. Add event\r\n"
+				+ "4. Remove event\r\n"
+				+ "0. Return to librarian menu\r\n"
+				+ "—-----------------------------------------------\r\n"
+				+ "";
+		System.out.println(patMenu);
+	}
+	
 	public static void closingProgram() {
 		String closeMessage = "Exiting the program...\r\n";
 		System.out.println(closeMessage);
