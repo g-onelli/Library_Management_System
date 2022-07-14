@@ -268,7 +268,7 @@ public class MenuScreen {
 					}
 			}
 
-		}else {
+		}else if(loginInput == 2){
 			//Call switch statement for patron menu
 			int id;
 			while(true) {
@@ -431,6 +431,10 @@ public class MenuScreen {
 					break;
 				}
 			}
+		}
+		else {
+			System.out.println("Invalid input");
+			System.out.println("Exiting...");
 		}
 	}
 }
