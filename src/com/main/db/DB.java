@@ -13,26 +13,20 @@ import java.util.List;
 import java.util.Date;
 import java.time.LocalDate;
 
-import com.entityClasses.book;
-import com.entityClasses.librarian;
-import com.entityClasses.patron;
-import com.entityClasses.request;
-import com.entityClasses.room;
-import com.entityClasses.video;
-import com.entityClasses.checkedOutRoom;
+import com.entityClasses.*;
 
 public class DB {
 	Connection con;
 	public void dbConnect() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			//System.out.println("Driver loaded...");
+			System.out.println("Driver loaded...");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_schema","root","Password123");
-			//System.out.println("Connection Established...");
+			System.out.println("Connection Established...");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -40,7 +34,7 @@ public class DB {
 	public void dbClose() {
 		try {
 			con.close();
-			//System.out.println("Connection Closed...");
+			System.out.println("Connection Closed...");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -62,24 +56,6 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	public List<book> showBooks() {
-		dbConnect();
-		String sql = "select * from books";
-		List<book> list = new ArrayList<>();
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add(new book(rst.getInt("id"),rst.getString("title"),rst.getString("author"),rst.getString("publisher"),rst.getDouble("callNumber"),rst.getString("genre")));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-		return list;
-	}
-	
 	public List<patron> showPatrons() {
 		dbConnect();
 		String sql = "select * from patrons";
@@ -97,54 +73,16 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	
-	public String insertPatron(patron newPatron) {
-		dbConnect();
-		String sql = "insert into patrons (name,cardExpirationDate,balance,password) values (?,?,?,?)";
-
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, newPatron.getName());
-			pstmt.setString(2, newPatron.getCardExpirationDate());
-			pstmt.setDouble(3, newPatron.getBalance());
-			pstmt.setString(4, newPatron.getPassword());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			dbClose();
-			return "Failed to insert Patron.";
-		}
-		dbClose();
-		return "Succesfully inserted Patron.";
-	}
-	
-	public String removePatron(int id) {
-		dbConnect();
-		String sql = "delete from patrons where id=?";
-		PreparedStatement pstmt;
-		try {
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, id);
-			System.out.println(pstmt);
-			pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			dbClose();
-			return "Failed to remove Patron.";
-		}
-		dbClose();
-		return "Successfully removed patron.";
-	}
-
-	public List<String> showRooms() {
+	public List<room> showRooms() {
 		dbConnect();
 		String sql = "select * from rooms";
-		List<String> list = new ArrayList<>();
+		List<room> list = new ArrayList<>();
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			ResultSet rst = pstmt.executeQuery();
 			
 			while(rst.next()) {	
-				list.add("Room Number: " + rst.getInt("roomNumber") + ", " + "Capacity: " + rst.getInt("capacity") + ", PresenterTools: " + rst.getInt("hasPresenterTools"));						
+				list.add(new room(rst.getInt("roomNumber"),rst.getInt("capacity"),rst.getInt("hasPresenterTools")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -153,99 +91,6 @@ public class DB {
 		return list;
 	}
 
-
-	public List<video> showVideos() {
-		dbConnect();
-		String sql = "select * from videos";
-		List<video> list = new ArrayList<>();
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add(new video(rst.getInt("id"),rst.getString("title"),rst.getString("director"),rst.getString("releaseDate"),rst.getDouble("callNumber"),rst.getString("genre")));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-		return list;
-	}
-	
-	public String insertBook(book temp) {
-		dbConnect();
-		String sql = "insert into books (title,author,publisher,callNumber,genre) values (?,?,?,?,?)";
-
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, temp.getTitle());
-			pstmt.setString(2, temp.getAuthor());
-			pstmt.setString(3, temp.getPublisher());
-			pstmt.setDouble(4, temp.getCallNumber());
-			pstmt.setString(5, temp.getGenre());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			dbClose();
-			return "Failed to insert Book.";
-		}
-		dbClose();
-		return "Succesfully inserted Book.";
-	}
-	
-	public String insertVideo(video temp) {
-		dbConnect();
-		String sql = "insert into videos (title,director,releaseDate,callNumber,genre) values (?,?,?,?,?)";
-
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, temp.getTitle());
-			pstmt.setString(2, temp.getDirector());
-			pstmt.setString(3, temp.getReleaseDate());
-			pstmt.setDouble(4, temp.getCallNumber());
-			pstmt.setString(5, temp.getGenre());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			dbClose();
-			return "Failed to insert Video.";
-		}
-		dbClose();
-		return "Succesfully inserted Video.";
-	}
-	
-	public String removeBook(int bookRem) {
-		dbConnect();
-		String sql = "delete from books where id=?";
-		PreparedStatement pstmt;
-		try {
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, bookRem);
-			pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			dbClose();
-			return "Failed to remove Book.";
-		}
-		dbClose();
-		return "Successfully removed Book.";
-	}
-	
-	public String removeVideo(int vidRem) {
-		dbConnect();
-		String sql = "delete from videos where id=?";
-		PreparedStatement pstmt;
-		try {
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, vidRem);
-			pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			dbClose();
-			return "Failed to remove Video.";
-		}
-		dbClose();
-		return "Successfully removed Video.";
-	}
-	
 	public List<String> fetchCheckedOutBooks(int id) {
 
 		dbConnect();
@@ -366,80 +211,5 @@ public class DB {
 
 		dbClose();
 		return list;
-	}
-	public List<String> showFreeRooms() {
-		dbConnect();
-		String sql = "select roomNumber, capacity, hasPresenterTools " + 
-				"from rooms " + 
-				"where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
-		List<String> list = new ArrayList<>();
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add("Room Number: " + rst.getInt("roomNumber") + ", " + "Capacity: " + rst.getInt("capacity") + ", PresenterTools: " + rst.getInt("hasPresenterTools"));						
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-		return list;
-	}
-	public List<room> checkFreeRooms() {
-		dbConnect();
-		String sql = "select roomNumber, capacity, hasPresenterTools " + 
-				"from rooms " + 
-				"where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
-		List<room> list = new ArrayList<>();
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add(new room(rst.getInt("roomNumber"),rst.getInt("capacity"),rst.getInt("hasPresenterTools")));
-				
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-		return list;
-	}
-	public void reserveRoom(checkedOutRoom reserve) {
-		dbConnect();
-		String sql = "insert into checkedOutRooms(patrons_id,rooms_roomNumber,dueDate) "
-				+ "values (?,?,?)";
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, reserve.getPatrons_id());
-			pstmt.setInt(2, reserve.getRooms_roomnumber());
-			pstmt.setDate(3, reserve.getDueDate());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-		
-	}
-	public void requestBook(request bookRequest, int id) {
-		dbConnect();
-		String sql = "insert into requests(description,submissionDate,title,patrons_id,author) "
-				+ "values (?,?,?,?,?)";
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, bookRequest.getDescription());
-			pstmt.setDate(2, bookRequest.getSubmissionDate());
-			pstmt.setString(3, bookRequest.getTitle());
-			pstmt.setInt(4, id);
-			pstmt.setString(5, bookRequest.getAuthor());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-		
 	}
 }
