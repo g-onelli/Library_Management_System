@@ -682,7 +682,7 @@ public class DB {
 			searchTag = "title";
 		}
 		 else if (tag.equalsIgnoreCase("director")) {
-			 searchTag = "author";
+			 searchTag = "director";
 		}
 		try {
 			String sqlCmd = "select * from videos where " + searchTag + "=?";
