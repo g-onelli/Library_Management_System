@@ -240,7 +240,6 @@ public class MenuScreen {
 			}
 
 
-			MenuDisplay.patMenuDisplay();
 			while (true) {
 				MenuDisplay.patMenuDisplay();
 				int patronInput = loginChoice.nextInt();
