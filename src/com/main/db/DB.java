@@ -603,4 +603,26 @@ public class DB {
 		dbClose();
 		
 	}
+	
+	public List<request> checkRequests() {
+		dbConnect();
+		List<request> reqList = new ArrayList<>();
+		try {
+			String sqlCmd = "select * from requests";
+			PreparedStatement cmd = con.prepareStatement(sqlCmd);
+			ResultSet result = cmd.executeQuery();
+			
+			while(result.next()) {
+				//public request(int id, String description, Date submissionDate, String title, String author)
+				reqList.add(new request(result.getInt("id"),
+						result.getString("description"),
+						result.getDate("submissionDate"),
+						result.getString("title"),
+						result.getString("author")));}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return reqList;
+	}
 }
