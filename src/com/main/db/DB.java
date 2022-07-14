@@ -134,6 +134,51 @@ public class DB {
 		dbClose();
 		return "Successfully removed patron.";
 	}
+	
+	public patron fetchPatron(int input) {
+		dbConnect();
+		patron onePatron = new patron();
+		String sqlCmd = "select * from patrons where id=?";
+		try {
+			PreparedStatement cmd = con.prepareStatement(sqlCmd);
+			cmd.setInt(1,input);
+			ResultSet result = cmd.executeQuery();
+			result.next();
+			// public patron(int id, String name, String cardExpirationDate, double balance, String password)
+			onePatron = new patron(result.getInt("id"),
+					result.getString("name"),
+					result.getString("cardExpirationDate"),
+					result.getDouble("balance"),
+					result.getString("password"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return onePatron;
+	}
+	
+	public void changeExpirationDate(int id, String newDate) {
+		PatronUtility utility = new PatronUtility();
+		String cmdSQL = "update patrons SET name=?, cardExpirationDate=?, balance=?, password=?";
+		boolean idCheck = utility.validateId(showPatrons(),id);
+		if(idCheck) {
+			patron tempPat = fetchPatron(id);
+			try {
+				PreparedStatement cmd = con.prepareStatement(cmdSQL);
+				cmd.setString(1, tempPat.getName());
+				cmd.setString(2, newDate);
+				cmd.setDouble(3, tempPat.getBalance());
+				cmd.setString(4, tempPat.getPassword());
+				cmd.executeUpdate();
+				System.out.println("Your card expiration date has been extended to "+newDate);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}else {
+			System.out.println("Sorry, we could not find a patron with that id. Please recheck input.");
+		}
+		
+		dbClose();
+	}
 
 	public List<String> showRooms() {
 		dbConnect();
