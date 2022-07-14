@@ -2,7 +2,7 @@
 Team Members:
 
 **Ian Kelly**
-  * Tasks Assigned*
+  *Tasks Assigned*
 - Add/Remove/View videos and books 
 - View Rooms(Completed) 
 - View/Register/Remove Patrons(Completed)
