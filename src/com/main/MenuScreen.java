@@ -144,6 +144,28 @@ public class MenuScreen {
 							// remove book from database and return success/fail state
 							System.out.println(db.removeVideo(vidRem));
 							break;
+						case 7:
+							MenuDisplay.searchBooksDisplay();
+							loginChoice.nextLine();
+							String tag = loginChoice.nextLine();
+							MenuDisplay.searchTermDisplay();
+							String term = loginChoice.nextLine();
+							List<book> bList = db.searchBooks(tag, term);
+							for (book b : bList) {
+								System.out.println(b);
+							}
+							break;
+						case 8:
+							MenuDisplay.searchVideosDisplay();
+							loginChoice.nextLine();
+							tag = loginChoice.nextLine();
+							MenuDisplay.searchTermDisplay();
+							term = loginChoice.nextLine();
+							List<video> vList = db.searchVideos(tag, term);
+							for (video v : vList) {
+								System.out.println(v);
+							}
+							break;
 						default:
 							break;
 						}

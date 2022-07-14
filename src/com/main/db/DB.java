@@ -23,31 +23,33 @@ import com.entityClasses.checkedOutRoom;
 import com.main.utility.PatronUtility;
 import com.entityClasses.event;
 
-
 public class DB {
 	Connection con;
+
 	public void dbConnect() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			//System.out.println("Driver loaded...");
+			// System.out.println("Driver loaded...");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_schema","root","Password123");
-			//System.out.println("Connection Established...");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_schema", "root", "Password123");
+			// System.out.println("Connection Established...");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+
 	public void dbClose() {
 		try {
 			con.close();
-			//System.out.println("Connection Closed...");
+			// System.out.println("Connection Closed...");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+
 	public List<librarian> showLibrarians() {
 		dbConnect();
 		String sql = "select * from librarians";
@@ -55,9 +57,11 @@ public class DB {
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add(new librarian(rst.getInt("id"),rst.getString("name"),rst.getDouble("salary"),rst.getString("position"),rst.getString("email"),rst.getString("phoneNumber"),rst.getString("password")));
+
+			while (rst.next()) {
+				list.add(new librarian(rst.getInt("id"), rst.getString("name"), rst.getDouble("salary"),
+						rst.getString("position"), rst.getString("email"), rst.getString("phoneNumber"),
+						rst.getString("password")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -65,6 +69,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
+
 	public List<book> showBooks() {
 		dbConnect();
 		String sql = "select * from books";
@@ -72,9 +77,10 @@ public class DB {
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add(new book(rst.getInt("id"),rst.getString("title"),rst.getString("author"),rst.getString("publisher"),rst.getDouble("callNumber"),rst.getString("genre")));
+
+			while (rst.next()) {
+				list.add(new book(rst.getInt("id"), rst.getString("title"), rst.getString("author"),
+						rst.getString("publisher"), rst.getDouble("callNumber"), rst.getString("genre")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -82,7 +88,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	
+
 	public List<patron> showPatrons() {
 		dbConnect();
 		String sql = "select * from patrons";
@@ -90,9 +96,10 @@ public class DB {
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add(new patron(rst.getInt("id"),rst.getString("name"),rst.getString("cardExpirationDate"),rst.getDouble("balance"),rst.getString("password")));
+
+			while (rst.next()) {
+				list.add(new patron(rst.getInt("id"), rst.getString("name"), rst.getString("cardExpirationDate"),
+						rst.getDouble("balance"), rst.getString("password")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -100,7 +107,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	
+
 	public String insertPatron(patron newPatron) {
 		dbConnect();
 		String sql = "insert into patrons (name,cardExpirationDate,balance,password) values (?,?,?,?)";
@@ -119,7 +126,7 @@ public class DB {
 		dbClose();
 		return "Succesfully inserted Patron.";
 	}
-	
+
 	public String removePatron(int id) {
 		dbConnect();
 		String sql = "delete from patrons where id=?";
@@ -137,33 +144,31 @@ public class DB {
 		dbClose();
 		return "Successfully removed patron.";
 	}
-	
+
 	public patron fetchPatron(int input) {
 		dbConnect();
 		patron onePatron = new patron();
 		String sqlCmd = "select * from patrons where id=?";
 		try {
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
-			cmd.setInt(1,input);
+			cmd.setInt(1, input);
 			ResultSet result = cmd.executeQuery();
 			result.next();
-			// public patron(int id, String name, String cardExpirationDate, double balance, String password)
-			onePatron = new patron(result.getInt("id"),
-					result.getString("name"),
-					result.getString("cardExpirationDate"),
-					result.getDouble("balance"),
-					result.getString("password"));
+			// public patron(int id, String name, String cardExpirationDate, double balance,
+			// String password)
+			onePatron = new patron(result.getInt("id"), result.getString("name"),
+					result.getString("cardExpirationDate"), result.getDouble("balance"), result.getString("password"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return onePatron;
 	}
-	
+
 	public void changeExpirationDate(int id, String newDate) {
 		PatronUtility utility = new PatronUtility();
 		String cmdSQL = "update patrons SET name=?, cardExpirationDate=?, balance=?, password=?";
-		boolean idCheck = utility.validateId(showPatrons(),id);
-		if(idCheck) {
+		boolean idCheck = utility.validateId(showPatrons(), id);
+		if (idCheck) {
 			patron tempPat = fetchPatron(id);
 			try {
 				PreparedStatement cmd = con.prepareStatement(cmdSQL);
@@ -172,14 +177,14 @@ public class DB {
 				cmd.setDouble(3, tempPat.getBalance());
 				cmd.setString(4, tempPat.getPassword());
 				cmd.executeUpdate();
-				System.out.println("Your card expiration date has been extended to "+newDate);
+				System.out.println("Your card expiration date has been extended to " + newDate);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}else {
+		} else {
 			System.out.println("Sorry, we could not find a patron with that id. Please recheck input.");
 		}
-		
+
 		dbClose();
 	}
 
@@ -190,9 +195,10 @@ public class DB {
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add("Room Number: " + rst.getInt("roomNumber") + ", " + "Capacity: " + rst.getInt("capacity") + ", PresenterTools: " + rst.getInt("hasPresenterTools"));						
+
+			while (rst.next()) {
+				list.add("Room Number: " + rst.getInt("roomNumber") + ", " + "Capacity: " + rst.getInt("capacity")
+						+ ", PresenterTools: " + rst.getInt("hasPresenterTools"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -200,76 +206,73 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	
-	public List<event> fetchEvents(){//returns a list of all events being hosted by the library
+
+	public List<event> fetchEvents() {// returns a list of all events being hosted by the library
 		dbConnect();
 		List<event> eventList = new ArrayList<>();
 		try {
 			String sqlCmd = "select * from events";
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
 			ResultSet result = cmd.executeQuery();
-			
-			while(result.next()) {
-				//event(id, String date, String description, String title)
-				eventList.add(new event(result.getInt("librarians_id"),//change the id to the actual event id
-						result.getString("date"),result.getString("description"),
-						result.getString("title")));}
+
+			while (result.next()) {
+				// event(id, String date, String description, String title)
+				eventList.add(new event(result.getInt("librarians_id"), // change the id to the actual event id
+						result.getString("date"), result.getString("description"), result.getString("title")));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
 		return eventList;
 	}
-			
-	
-	public event fetchEvent(String input) {//returns a single event, via id, being hosted by the library
+
+	public event fetchEvent(String input) {// returns a single event, via id, being hosted by the library
 		int idNum = Integer.parseInt(input);
 		dbConnect();
 		event oneEvent = new event();
 		String sqlCmd = "select * from events where id=?";
 		try {
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
-			cmd.setInt(1,idNum);
+			cmd.setInt(1, idNum);
 			ResultSet result = cmd.executeQuery();
 			result.next();
-			oneEvent = new event(result.getInt("id"),
-					result.getString("date"),
-					result.getString("description"),
+			oneEvent = new event(result.getInt("id"), result.getString("date"), result.getString("description"),
 					result.getString("title"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return oneEvent;
 	}
-	
+
 	public void editEvent(String eventId, String modField, String modValue) {
 		event modEvent = fetchEvent(eventId);
 		String cmdSQL = "update events SET date=?, description=?, title=? where id=?";
 		try {
 			PreparedStatement cmd = con.prepareStatement(cmdSQL);
-			switch(modField) {
-				case "date":
-					cmd.setString(1, modValue);
-					cmd.setString(2, modEvent.getDescription());
-					cmd.setString(3, modEvent.getTitle());
-					cmd.setInt(4, modEvent.getId());
-					break;
-				case "title":
-					cmd.setString(1, modEvent.getDate());
-					cmd.setString(2, modEvent.getDescription());
-					cmd.setString(3, modValue);
-					cmd.setInt(4, modEvent.getId());
-					break;
-				case "description":
-					cmd.setString(1, modEvent.getDate());
-					cmd.setString(2, modValue);
-					cmd.setString(3, modEvent.getTitle());
-					cmd.setInt(4, modEvent.getId());
-					break;
-				default:
-					System.out.println("That is not a field that is accepted. Please try again.");
-					break;
+			switch (modField) {
+			case "date":
+				cmd.setString(1, modValue);
+				cmd.setString(2, modEvent.getDescription());
+				cmd.setString(3, modEvent.getTitle());
+				cmd.setInt(4, modEvent.getId());
+				break;
+			case "title":
+				cmd.setString(1, modEvent.getDate());
+				cmd.setString(2, modEvent.getDescription());
+				cmd.setString(3, modValue);
+				cmd.setInt(4, modEvent.getId());
+				break;
+			case "description":
+				cmd.setString(1, modEvent.getDate());
+				cmd.setString(2, modValue);
+				cmd.setString(3, modEvent.getTitle());
+				cmd.setInt(4, modEvent.getId());
+				break;
+			default:
+				System.out.println("That is not a field that is accepted. Please try again.");
+				break;
 			}
 			cmd.executeUpdate();
 			System.out.println("Your event has now been updated");
@@ -277,10 +280,9 @@ public class DB {
 			e.printStackTrace();
 		}
 		dbClose();
-		
+
 	}
-	
-	
+
 	public void addEvent(String date, String descrption, String title, int libID) {
 		dbConnect();
 		String cmdSQL = "insert into events(date,description,title,librarians_id) values(?,?,?,?)";
@@ -290,32 +292,31 @@ public class DB {
 			cmd.setString(2, descrption);
 			cmd.setString(3, title);
 			cmd.setInt(4, libID);
-			
+
 			cmd.executeUpdate();
 			System.out.println("Your event has been added to the database");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
-		
+
 	}
-	
-	
+
 	public void deleteEvent(int id) {
 		dbConnect();
-		String cmdSQL="delete from events where id=?";
-		//int idNum = Integer.parseInt(id);
+		String cmdSQL = "delete from events where id=?";
+		// int idNum = Integer.parseInt(id);
 		try {
 			PreparedStatement cmd = con.prepareStatement(cmdSQL);
-			cmd.setInt(1,id);
+			cmd.setInt(1, id);
 			cmd.executeUpdate();
 			System.out.println("Your entry has been delete. Have a nice day!");
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
-		
+
 	}
 
 	public List<video> showVideos() {
@@ -325,9 +326,10 @@ public class DB {
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add(new video(rst.getInt("id"),rst.getString("title"),rst.getString("director"),rst.getString("releaseDate"),rst.getDouble("callNumber"),rst.getString("genre")));
+
+			while (rst.next()) {
+				list.add(new video(rst.getInt("id"), rst.getString("title"), rst.getString("director"),
+						rst.getString("releaseDate"), rst.getDouble("callNumber"), rst.getString("genre")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -335,7 +337,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	
+
 	public String insertBook(book temp) {
 		dbConnect();
 		String sql = "insert into books (title,author,publisher,callNumber,genre) values (?,?,?,?,?)";
@@ -355,7 +357,7 @@ public class DB {
 		dbClose();
 		return "Succesfully inserted Book.";
 	}
-	
+
 	public String insertVideo(video temp) {
 		dbConnect();
 		String sql = "insert into videos (title,director,releaseDate,callNumber,genre) values (?,?,?,?,?)";
@@ -375,7 +377,7 @@ public class DB {
 		dbClose();
 		return "Succesfully inserted Video.";
 	}
-	
+
 	public String removeBook(int bookRem) {
 		dbConnect();
 		String sql = "delete from books where id=?";
@@ -392,7 +394,7 @@ public class DB {
 		dbClose();
 		return "Successfully removed Book.";
 	}
-	
+
 	public String removeVideo(int vidRem) {
 		dbConnect();
 		String sql = "delete from videos where id=?";
@@ -409,7 +411,7 @@ public class DB {
 		dbClose();
 		return "Successfully removed Video.";
 	}
-	
+
 	public List<String> fetchCheckedOutBooks(int id) {
 
 		dbConnect();
@@ -424,7 +426,8 @@ public class DB {
 			ResultSet rst = pStmt.executeQuery();
 			while (rst.next()) {
 
-				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Due Date: " + rst.getString("dueDate"));
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber")
+						+ ", Due Date: " + rst.getString("dueDate"));
 			}
 
 		} catch (SQLException e) {
@@ -448,7 +451,8 @@ public class DB {
 			pStmt.setInt(1, id);
 			ResultSet rst = pStmt.executeQuery();
 			while (rst.next()) {
-				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Due Date: " + rst.getString("dueDate"));
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber")
+						+ ", Due Date: " + rst.getString("dueDate"));
 			}
 
 		} catch (SQLException e) {
@@ -467,8 +471,6 @@ public class DB {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		long diff;
 
-
-
 		String sql = "select title, callNumber, dueDate from books b, checkedoutbooks cb where cb.books_id = b.id and cb.patrons_id = ? and dueDate < ?";
 
 		try {
@@ -478,15 +480,16 @@ public class DB {
 			ResultSet rst = pStmt.executeQuery();
 			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
 			Date secondDate;
-			if(!rst.next())
+			if (!rst.next())
 				diff = 0;
-			else{
+			else {
 				secondDate = sdf.parse(rst.getString("dueDate"));
 				diff = secondDate.getTime() - firstDate.getTime();
 			}
 			while (rst.next()) {
 
-				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + diff);
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber")
+						+ ", Days Overdue: " + diff);
 			}
 
 		} catch (SQLException | ParseException e) {
@@ -496,6 +499,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
+
 	public List<String> fetchOverdueVideos(int id) {
 
 		dbConnect();
@@ -513,69 +517,71 @@ public class DB {
 			ResultSet rst = pStmt.executeQuery();
 			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
 			Date secondDate;
-			if(!rst.next())
+			if (!rst.next())
 				diff = 0;
-			else{
+			else {
 				secondDate = sdf.parse(rst.getString("dueDate"));
 				diff = secondDate.getTime() - firstDate.getTime();
 			}
 
 			while (rst.next()) {
-				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + diff);
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber")
+						+ ", Days Overdue: " + diff);
 			}
 
-		} catch (SQLException | ParseException e ) {
+		} catch (SQLException | ParseException e) {
 			e.printStackTrace();
 		}
 
 		dbClose();
 		return list;
 	}
+
 	public List<String> showFreeRooms() {
 		dbConnect();
-		String sql = "select roomNumber, capacity, hasPresenterTools " + 
-				"from rooms " + 
-				"where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
+		String sql = "select roomNumber, capacity, hasPresenterTools " + "from rooms "
+				+ "where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
 		List<String> list = new ArrayList<>();
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add("Room Number: " + rst.getInt("roomNumber") + ", " + "Capacity: " + rst.getInt("capacity") + ", PresenterTools: " + rst.getInt("hasPresenterTools"));						
+
+			while (rst.next()) {
+				list.add("Room Number: " + rst.getInt("roomNumber") + ", " + "Capacity: " + rst.getInt("capacity")
+						+ ", PresenterTools: " + rst.getInt("hasPresenterTools"));
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
 		return list;
 	}
+
 	public List<room> checkFreeRooms() {
 		dbConnect();
-		String sql = "select roomNumber, capacity, hasPresenterTools " + 
-				"from rooms " + 
-				"where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
+		String sql = "select roomNumber, capacity, hasPresenterTools " + "from rooms "
+				+ "where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
 		List<room> list = new ArrayList<>();
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add(new room(rst.getInt("roomNumber"),rst.getInt("capacity"),rst.getInt("hasPresenterTools")));
-				
+
+			while (rst.next()) {
+				list.add(new room(rst.getInt("roomNumber"), rst.getInt("capacity"), rst.getInt("hasPresenterTools")));
+
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
 		return list;
 	}
+
 	public void reserveRoom(checkedOutRoom reserve) {
 		dbConnect();
-		String sql = "insert into checkedOutRooms(patrons_id,rooms_roomNumber,dueDate) "
-				+ "values (?,?,?)";
+		String sql = "insert into checkedOutRooms(patrons_id,rooms_roomNumber,dueDate) " + "values (?,?,?)";
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, reserve.getPatrons_id());
@@ -586,12 +592,12 @@ public class DB {
 			e.printStackTrace();
 		}
 		dbClose();
-		
+
 	}
+
 	public void requestBook(request bookRequest, int id) {
 		dbConnect();
-		String sql = "insert into requests(description,submissionDate,title,patrons_id,author) "
-				+ "values (?,?,?,?,?)";
+		String sql = "insert into requests(description,submissionDate,title,patrons_id,author) " + "values (?,?,?,?,?)";
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, bookRequest.getDescription());
@@ -604,9 +610,9 @@ public class DB {
 			e.printStackTrace();
 		}
 		dbClose();
-		
+
 	}
-	
+
 	public List<request> checkRequests() {
 		dbConnect();
 		List<request> reqList = new ArrayList<>();
@@ -614,18 +620,87 @@ public class DB {
 			String sqlCmd = "select * from requests";
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
 			ResultSet result = cmd.executeQuery();
-			
-			while(result.next()) {
-				//public request(int id, String description, Date submissionDate, String title, String author)
-				reqList.add(new request(result.getInt("id"),
-						result.getString("description"),
-						result.getDate("submissionDate"),
-						result.getString("title"),
-						result.getString("author")));}
+
+			while (result.next()) {
+				// public request(int id, String description, Date submissionDate, String title,
+				// String author)
+				reqList.add(new request(result.getInt("id"), result.getString("description"),
+						result.getDate("submissionDate"), result.getString("title"), result.getString("author")));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
 		return reqList;
+	}
+
+	public List<book> searchBooks(String tag, String term) {
+		List<book> list = new ArrayList<>();
+		dbConnect();
+		String searchTag = "";
+		if(tag.equalsIgnoreCase("Genre")) {
+			searchTag = "genre";
+			
+		} else if (tag.equalsIgnoreCase("title")) {
+			searchTag = "title";
+		}
+		 else if (tag.equalsIgnoreCase("author")) {
+			 searchTag = "author";
+		}
+		 else if (tag.equalsIgnoreCase("publisher")) {
+			 searchTag = "publisher";
+		}
+		try {
+			String sqlCmd = "select * from books where "+ searchTag +"=?";
+			PreparedStatement pstmt = con.prepareStatement(sqlCmd);
+			pstmt.setString(1, term);
+			System.out.println(pstmt);
+			ResultSet result = pstmt.executeQuery();
+
+			while (result.next()) {
+				// public request(int id, String description, Date submissionDate, String title,
+				// String author)
+				list.add(new book(result.getInt("id"), result.getString("title"), result.getString("author"),
+						result.getString("publisher"), result.getDouble("callNumber"), result.getString("genre")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			dbClose();
+		}
+		dbClose();
+		return list;
+	}
+
+	public List<video> searchVideos(String tag, String term) {
+		dbConnect();
+		List<video> list = new ArrayList<>();
+		String searchTag = "";
+		if(tag.equalsIgnoreCase("Genre")) {
+			searchTag = "genre";
+			
+		} else if (tag.equalsIgnoreCase("title")) {
+			searchTag = "title";
+		}
+		 else if (tag.equalsIgnoreCase("director")) {
+			 searchTag = "author";
+		}
+		try {
+			String sqlCmd = "select * from videos where " + searchTag + "=?";
+			PreparedStatement pstmt = con.prepareStatement(sqlCmd);
+			pstmt.setString(1, term);
+			ResultSet result = pstmt.executeQuery();
+
+			while (result.next()) {
+				// public request(int id, String description, Date submissionDate, String title,
+				// String author)
+				list.add(new video(result.getInt("id"), result.getString("title"), result.getString("director"),
+						result.getString("releaseDate"), result.getDouble("callNumber"), result.getString("genre")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			dbClose();
+		}
+		dbClose();
+		return list;
 	}
 }
