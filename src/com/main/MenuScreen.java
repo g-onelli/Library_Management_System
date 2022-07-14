@@ -13,11 +13,13 @@ import com.entityClasses.request;
 import com.entityClasses.room;
 import com.entityClasses.video;
 import com.main.db.DB;
+import com.main.utility.BookAndVideoUtility;
 import com.main.utility.LibrarianUtility;
 import com.main.utility.PatronUtility;
 import com.main.utility.RoomUtility;
 import com.menuCalls.MenuDisplay;
 import com.entityClasses.event;
+
 
 public class MenuScreen {
 	public static void main(String[] args) {
@@ -206,7 +208,7 @@ public class MenuScreen {
 				case 4:
 						MenuDisplay.eventMenuDisplay();
 						int eventInput = loginChoice.nextInt();
-						
+
 						switch(eventInput) {
 							case 1:
 								List<event> eventList = db.fetchEvents();
@@ -218,10 +220,10 @@ public class MenuScreen {
 								System.out.println("Please input the event id: ");
 								loginChoice.nextLine();
 								String eventID = loginChoice.nextLine();
-								
+
 								System.out.println("Please input the field you would like to alter(date,description,title):");
 								String modField = loginChoice.nextLine();
-								
+
 								System.out.println("Please input the new value for the selected field: ");
 								String modValue = loginChoice.nextLine();
 								db.editEvent(eventID,modField,modValue);

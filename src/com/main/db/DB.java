@@ -13,15 +13,8 @@ import java.util.List;
 import java.util.Date;
 import java.time.LocalDate;
 
-import com.entityClasses.book;
-import com.entityClasses.librarian;
-import com.entityClasses.patron;
-import com.entityClasses.request;
-import com.entityClasses.room;
-import com.entityClasses.video;
-import com.entityClasses.checkedOutRoom;
+import com.entityClasses.*;
 import com.main.utility.PatronUtility;
-import com.entityClasses.event;
 
 
 public class DB {
@@ -82,7 +75,6 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	
 	public List<patron> showPatrons() {
 		dbConnect();
 		String sql = "select * from patrons";
@@ -100,7 +92,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	
+
 	public String insertPatron(patron newPatron) {
 		dbConnect();
 		String sql = "insert into patrons (name,cardExpirationDate,balance,password) values (?,?,?,?)";
@@ -137,7 +129,7 @@ public class DB {
 		dbClose();
 		return "Successfully removed patron.";
 	}
-	
+
 	public patron fetchPatron(int input) {
 		dbConnect();
 		patron onePatron = new patron();
@@ -158,7 +150,7 @@ public class DB {
 		}
 		return onePatron;
 	}
-	
+
 	public void changeExpirationDate(int id, String newDate) {
 		PatronUtility utility = new PatronUtility();
 		String cmdSQL = "update patrons SET name=?, cardExpirationDate=?, balance=?, password=?";
@@ -179,7 +171,7 @@ public class DB {
 		}else {
 			System.out.println("Sorry, we could not find a patron with that id. Please recheck input.");
 		}
-		
+
 		dbClose();
 	}
 
@@ -200,7 +192,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	
+
 	public List<event> fetchEvents(){//returns a list of all events being hosted by the library
 		dbConnect();
 		List<event> eventList = new ArrayList<>();
@@ -208,7 +200,7 @@ public class DB {
 			String sqlCmd = "select * from events";
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
 			ResultSet result = cmd.executeQuery();
-			
+
 			while(result.next()) {
 				//event(id, String date, String description, String title)
 				eventList.add(new event(result.getInt("librarians_id"),//change the id to the actual event id
@@ -220,8 +212,8 @@ public class DB {
 		dbClose();
 		return eventList;
 	}
-			
-	
+
+
 	public event fetchEvent(String input) {//returns a single event, via id, being hosted by the library
 		int idNum = Integer.parseInt(input);
 		dbConnect();
@@ -239,10 +231,10 @@ public class DB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return oneEvent;
 	}
-	
+
 	public void editEvent(String eventId, String modField, String modValue) {
 		event modEvent = fetchEvent(eventId);
 		String cmdSQL = "update events SET date=?, description=?, title=? where id=?";
@@ -277,10 +269,10 @@ public class DB {
 			e.printStackTrace();
 		}
 		dbClose();
-		
+
 	}
-	
-	
+
+
 	public void addEvent(String date, String descrption, String title, int libID) {
 		dbConnect();
 		String cmdSQL = "insert into events(date,description,title,librarians_id) values(?,?,?,?)";
@@ -290,17 +282,17 @@ public class DB {
 			cmd.setString(2, descrption);
 			cmd.setString(3, title);
 			cmd.setInt(4, libID);
-			
+
 			cmd.executeUpdate();
 			System.out.println("Your event has been added to the database");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
-		
+
 	}
-	
-	
+
+
 	public void deleteEvent(int id) {
 		dbConnect();
 		String cmdSQL="delete from events where id=?";
@@ -310,12 +302,12 @@ public class DB {
 			cmd.setInt(1,id);
 			cmd.executeUpdate();
 			System.out.println("Your entry has been delete. Have a nice day!");
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
-		
+
 	}
 
 	public List<video> showVideos() {
@@ -464,8 +456,8 @@ public class DB {
 		dbConnect();
 
 		List<String> list = new ArrayList<>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		long diff;
+		long days;
+
 
 
 
@@ -476,20 +468,16 @@ public class DB {
 			pStmt.setInt(1, id);
 			pStmt.setString(2, java.time.LocalDate.now().toString());
 			ResultSet rst = pStmt.executeQuery();
-			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
-			Date secondDate;
-			if(!rst.next())
-				diff = 0;
-			else{
-				secondDate = sdf.parse(rst.getString("dueDate"));
-				diff = secondDate.getTime() - firstDate.getTime();
-			}
+			LocalDate local = java.time.LocalDate.now();
+			LocalDate due;
 			while (rst.next()) {
+				due = LocalDate.parse(rst.getString("dueDate"));
+				days = ChronoUnit.DAYS.between(due, local);
 
-				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + diff);
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + days);
 			}
 
-		} catch (SQLException | ParseException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
@@ -501,8 +489,7 @@ public class DB {
 		dbConnect();
 
 		List<String> list = new ArrayList<>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		long diff;
+		long days;
 
 		String sql = "select title, callNumber, dueDate from videos v, checkedoutvideos cv where cv.videos_id = v.id and cv.patrons_id = ? and dueDate < ?";
 
@@ -511,26 +498,123 @@ public class DB {
 			pStmt.setInt(1, id);
 			pStmt.setString(2, java.time.LocalDate.now().toString());
 			ResultSet rst = pStmt.executeQuery();
-			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
-			Date secondDate;
-			if(!rst.next())
-				diff = 0;
-			else{
-				secondDate = sdf.parse(rst.getString("dueDate"));
-				diff = secondDate.getTime() - firstDate.getTime();
-			}
+			LocalDate local = java.time.LocalDate.now();
+			LocalDate due;
 
 			while (rst.next()) {
-				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + diff);
+				due = LocalDate.parse(rst.getString("dueDate"));
+				days = ChronoUnit.DAYS.between(due, local);
+
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + days);
 			}
 
-		} catch (SQLException | ParseException e ) {
+		} catch (SQLException e ) {
 			e.printStackTrace();
 		}
 
 		dbClose();
 		return list;
 	}
+
+	public List<book> getAvailableBooks(){
+		dbConnect();
+		String sql = "select * from books where id NOT IN (select books_id from checkedoutbooks);";
+		List<book> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+
+			while(rst.next()) {
+				list.add(new book(rst.getInt("id"),rst.getString("title"),rst.getString("author"), rst.getString("publisher"), rst.getDouble("callNumber"), rst.getString("genre")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	}
+
+	public List<video> getAvailableVideos(){
+		dbConnect();
+		String sql = "select * from videos where id NOT IN (select videos_id from checkedoutvideos);";
+		List<video> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+
+			while(rst.next()) {
+				list.add(new video(rst.getInt("id"),rst.getString("title"),rst.getString("director"), rst.getString("releaseDate"), rst.getDouble("callNumber"), rst.getString("genre")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	}
+
+	public void checkoutBook(checkedOutBook bReserve) {
+		dbConnect();
+		String sql = "insert into checkedOutBooks(patrons_id,books_id,dueDate) "
+				+ "values (?,?,?)";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, bReserve.getPatrons_id());
+			pstmt.setInt(2, bReserve.getBooks_id());
+			pstmt.setDate(3, bReserve.getDueDate());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+	}
+	public void checkOutVideo(checkedOutVideo vReserve) {
+		dbConnect();
+		String sql = "insert into checkedoutvideos(patrons_id,videos_id,dueDate) "
+				+ "values (?,?,?)";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, vReserve.getPatrons_id());
+			pstmt.setInt(2, vReserve.getVideos_id());
+			pstmt.setDate(3, vReserve.getDueDate());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+	}
+	public String checkInBook(double callNum) {
+		dbConnect();
+		String sql = "delete cb from checkedoutbooks cb left join books b on b.id = cb.books_id where callNumber = ?";
+		PreparedStatement pstmt;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setDouble(1, callNum);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			dbClose();
+			return "The book was never checked out, or was already checked back in.";
+		}
+		dbClose();
+		return "Successfully checked in.";
+	}
+	public String checkInVideo(double callNum) {
+		dbConnect();
+		String sql = "delete cv from checkedoutvideos cv left join videos v on v.id = cv.videos_id where callNumber = ?;";
+		PreparedStatement pstmt;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setDouble(1, callNum);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			dbClose();
+			return "The video was never checked out, or was already checked back in.";
+		}
+		dbClose();
+		return "Successfully checked in.";
+	}
+
 	public List<String> showFreeRooms() {
 		dbConnect();
 		String sql = "select roomNumber, capacity, hasPresenterTools " + 
@@ -606,7 +690,7 @@ public class DB {
 		dbClose();
 		
 	}
-	
+
 	public List<request> checkRequests() {
 		dbConnect();
 		List<request> reqList = new ArrayList<>();
@@ -614,7 +698,7 @@ public class DB {
 			String sqlCmd = "select * from requests";
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
 			ResultSet result = cmd.executeQuery();
-			
+
 			while(result.next()) {
 				//public request(int id, String description, Date submissionDate, String title, String author)
 				reqList.add(new request(result.getInt("id"),

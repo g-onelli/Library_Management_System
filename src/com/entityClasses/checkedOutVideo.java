@@ -2,25 +2,25 @@ package com.entityClasses;
 
 import java.sql.Date;
 
-public class checkedOutRoom {
+public class checkedOutVideo {
     private int patrons_id;
-    private int rooms_roomnumber;
+    private int videos_id;
     private Date dueDate;
 
-    public checkedOutRoom() {
+    public checkedOutVideo() {
         super();
     }
 
-    public checkedOutRoom(int patrons_id, int rooms_roomnumber, Date dueDate) {
+    public checkedOutVideo(int patrons_id, int videos_id, Date dueDate) {
         super();
         this.patrons_id = patrons_id;
-        this.rooms_roomnumber = rooms_roomnumber;
+        this.videos_id = videos_id;
         this.dueDate = dueDate;
     }
 
     @Override
     public String toString() {
-        return "checkedOutRoom [patrons_id=" + patrons_id + ", rooms_roomnumber=" + rooms_roomnumber + ", dueDate="
+        return "checkedOutVideo [patrons_id=" + patrons_id + ", videos_id=" + videos_id + ", dueDate="
                 + dueDate + "]";
     }
 
@@ -32,12 +32,12 @@ public class checkedOutRoom {
         this.patrons_id = patrons_id;
     }
 
-    public int getRooms_roomnumber() {
-        return rooms_roomnumber;
+    public int getVideos_id() {
+        return videos_id;
     }
 
-    public void setRooms_roomnumber(int rooms_roomnumber) {
-        this.rooms_roomnumber = rooms_roomnumber;
+    public void setVideos_id(int videos_id) {
+        this.videos_id = videos_id;
     }
 
     public Date getDueDate() {
@@ -48,3 +48,4 @@ public class checkedOutRoom {
         this.dueDate = date;
     }
 }
+
