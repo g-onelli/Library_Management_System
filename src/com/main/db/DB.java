@@ -123,7 +123,7 @@ public class DB {
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, id);
-			System.out.println(pstmt);
+			//System.out.println(pstmt);
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -195,72 +195,80 @@ public class DB {
 		return list;
 	}
 
-	public List<event> fetchEvents() {// returns a list of all events being hosted by the library
+	public List<event> fetchEvents(){//returns a list of all events being hosted by the library
 		dbConnect();
 		List<event> eventList = new ArrayList<>();
 		try {
 			String sqlCmd = "select * from events";
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
 			ResultSet result = cmd.executeQuery();
-
-			while (result.next()) {
-				// event(id, String date, String description, String title)
-				eventList.add(new event(result.getInt("librarians_id"), // change the id to the actual event id
-						result.getString("date"), result.getString("description"), result.getString("title")));
-			}
+			
+			while(result.next()) {
+				//event(id, String date, String description, String title)
+				eventList.add(new event(result.getInt("id"),//change the id to the actual event id
+						result.getString("date"),result.getString("description"),
+						result.getString("title")));}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
 		return eventList;
 	}
-
-	public event fetchEvent(String input) {// returns a single event, via id, being hosted by the library
+			
+	
+	public event fetchEvent(String input) {//returns a single event, via id, being hosted by the library
 		int idNum = Integer.parseInt(input);
 		dbConnect();
 		event oneEvent = new event();
 		String sqlCmd = "select * from events where id=?";
 		try {
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
-			cmd.setInt(1, idNum);
+			cmd.setInt(1,idNum);											//Important changes in this function
 			ResultSet result = cmd.executeQuery();
-			result.next();
-			oneEvent = new event(result.getInt("id"), result.getString("date"), result.getString("description"),
-					result.getString("title"));
+			//result.next();
+			if(result.next()) {
+				oneEvent = new event(result.getInt("id"),
+						result.getString("date"),
+						result.getString("description"),
+						result.getString("title"));	
+			}else {
+				System.out.println("There is no event to edit.");
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+		
 		return oneEvent;
 	}
-
+	
 	public void editEvent(String eventId, String modField, String modValue) {
 		event modEvent = fetchEvent(eventId);
 		String cmdSQL = "update events SET date=?, description=?, title=? where id=?";
 		try {
 			PreparedStatement cmd = con.prepareStatement(cmdSQL);
-			switch (modField) {
-			case "date":
-				cmd.setString(1, modValue);
-				cmd.setString(2, modEvent.getDescription());
-				cmd.setString(3, modEvent.getTitle());
-				cmd.setInt(4, modEvent.getId());
-				break;
-			case "title":
-				cmd.setString(1, modEvent.getDate());
-				cmd.setString(2, modEvent.getDescription());
-				cmd.setString(3, modValue);
-				cmd.setInt(4, modEvent.getId());
-				break;
-			case "description":
-				cmd.setString(1, modEvent.getDate());
-				cmd.setString(2, modValue);
-				cmd.setString(3, modEvent.getTitle());
-				cmd.setInt(4, modEvent.getId());
-				break;
-			default:
-				System.out.println("That is not a field that is accepted. Please try again.");
-				break;
+			switch(modField) {
+				case "date":
+					cmd.setString(1, modValue);
+					cmd.setString(2, modEvent.getDescription());
+					cmd.setString(3, modEvent.getTitle());
+					cmd.setInt(4, modEvent.getId());
+					break;
+				case "title":
+					cmd.setString(1, modEvent.getDate());
+					cmd.setString(2, modEvent.getDescription());
+					cmd.setString(3, modValue);
+					cmd.setInt(4, modEvent.getId());
+					break;
+				case "description":
+					cmd.setString(1, modEvent.getDate());
+					cmd.setString(2, modValue);
+					cmd.setString(3, modEvent.getTitle());
+					cmd.setInt(4, modEvent.getId());
+					break;
+				default:
+					System.out.println("That is not a field that is accepted. Please try again.");
+					break;
 			}
 			cmd.executeUpdate();
 			System.out.println("Your event has now been updated");
@@ -268,9 +276,12 @@ public class DB {
 			e.printStackTrace();
 		}
 		dbClose();
-
+		System.out.println("");
+		System.out.println("Returning to event menu.");
+		System.out.println("");
 	}
-
+	
+	
 	public void addEvent(String date, String descrption, String title, int libID) {
 		dbConnect();
 		String cmdSQL = "insert into events(date,description,title,librarians_id) values(?,?,?,?)";
@@ -280,33 +291,38 @@ public class DB {
 			cmd.setString(2, descrption);
 			cmd.setString(3, title);
 			cmd.setInt(4, libID);
-
+			
 			cmd.executeUpdate();
 			System.out.println("Your event has been added to the database");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
-
+		System.out.println("");
+		System.out.println("Returning to event menu.");
+		System.out.println("");
 	}
-
+	
+	
 	public void deleteEvent(int id) {
 		dbConnect();
-		String cmdSQL = "delete from events where id=?";
-		// int idNum = Integer.parseInt(id);
+		String cmdSQL="delete from events where id=?";
+		//int idNum = Integer.parseInt(id);
 		try {
 			PreparedStatement cmd = con.prepareStatement(cmdSQL);
-			cmd.setInt(1, id);
+			cmd.setInt(1,id);
 			cmd.executeUpdate();
-			System.out.println("Your entry has been delete. Have a nice day!");
-
+			System.out.println("Your entry has been delete.");
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
-
+		System.out.println("");
+		System.out.println("Returning to event menu.");
+		System.out.println("");
+		
 	}
-
 	public List<video> showVideos() {
 		dbConnect();
 		String sql = "select * from videos";
@@ -668,18 +684,58 @@ public class DB {
 			String sqlCmd = "select * from requests";
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
 			ResultSet result = cmd.executeQuery();
-
-			while (result.next()) {
-				// public request(int id, String description, Date submissionDate, String title,
-				// String author)
-				reqList.add(new request(result.getInt("id"), result.getString("description"),
-						result.getDate("submissionDate"), result.getString("title"), result.getString("author")));
-			}
+			
+			while(result.next()) {
+				//public request(int id, String description, Date submissionDate, String title, String author)
+				reqList.add(new request(result.getInt("id"),
+						result.getString("description"),
+						result.getDate("submissionDate"),
+						result.getString("title"),
+						result.getString("author")));}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
 		return reqList;
+	}
+	
+	public void confirmRequest(int id, String genre, String publisher, double callNum) {
+		//int id, String description, Date submissionDate, String title, String author
+		dbConnect();
+		String selectCmd = "select * from requests where id=?";
+		request conReq = new request();
+		try {
+			PreparedStatement getObj = con.prepareStatement(selectCmd);
+			getObj.setInt(1,id);
+			ResultSet objResult = getObj.executeQuery();
+			objResult.next();
+			conReq = new request(objResult.getInt("id"),
+					objResult.getString("description"),
+					objResult.getDate("submissionDate"),
+					objResult.getString("title"),
+					objResult.getString("author"));
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		//int id, String title, String author, String publisher, Double callNumber, String genre
+		book newBook = new book(1,conReq.getTitle(),conReq.getAuthor(),publisher,callNum,genre);
+		insertBook(newBook);
+		System.out.println("The book has been added to the library's collections");
+		String deleteCmd = "delete from requests where id=?";
+		dbConnect();
+		try {
+			PreparedStatement delObj = con.prepareStatement(deleteCmd);
+			delObj.setInt(1, id);
+			delObj.executeUpdate();
+			System.out.println("The request has been removed from the request database.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("");
+		System.out.println("Returning to requests menu.");
+		System.out.println("");
+		dbClose();
 	}
 
 	public List<book> searchBooks(String tag, String term) {
@@ -702,7 +758,7 @@ public class DB {
 			String sqlCmd = "select * from books where "+ searchTag +"=?";
 			PreparedStatement pstmt = con.prepareStatement(sqlCmd);
 			pstmt.setString(1, term);
-			System.out.println(pstmt);
+			//System.out.println(pstmt);
 			ResultSet result = pstmt.executeQuery();
 
 			while (result.next()) {
