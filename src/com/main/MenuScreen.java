@@ -508,7 +508,7 @@ public class MenuScreen {
                                 break;
                             }
                             System.out.println(db.checkInBook(callNum));
-                            System.out.println("Enter book call number");
+                            System.out.println("Enter video call number");
                             try{
                                 callNum = login.nextDouble();
                             }
@@ -592,7 +592,7 @@ public class MenuScreen {
                                 System.out.println(date3);
                                 vReserve.setDueDate(date3);
                                 db.checkOutVideo(vReserve);
-                                System.out.println("Book Checked Out and is due on: " + date3);
+                                System.out.println("Video Checked Out and is due on: " + date3);
                                 break;
                             }
                         }
