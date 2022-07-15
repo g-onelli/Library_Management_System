@@ -28,7 +28,7 @@ public class MenuScreen {
             MenuDisplay.closingProgram();
             MenuDisplay.exitMessage();
         }
-        if (loginInput == 1) {
+        else if (loginInput == 1) {
             // Call switch statement for librarian menu
             while (true) {
                 System.out.println("------------Librarian Login-----------\\r\\n");
