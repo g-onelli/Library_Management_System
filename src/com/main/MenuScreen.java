@@ -466,6 +466,7 @@ public class MenuScreen {
                                 break;
                             }
                         }
+                        break;
                     case 7://check in a book or video
                         System.out.println("********************************");
                         System.out.println("Checking in book, video, or both?");
