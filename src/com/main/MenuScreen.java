@@ -410,11 +410,7 @@ public class MenuScreen {
                                 System.out.println(s);
                             }
                         }
-<<<<<<< HEAD
                         break;
-=======
-			break;
->>>>>>> main
                     case 4: // 4. Submit book requests
                         request request = new request();
                         System.out.println("Enter Book Title");
@@ -536,7 +532,6 @@ public class MenuScreen {
                                 login.next();
                                 break;
                             }
-<<<<<<< HEAD
                             isValidCallNum = itemUtil.validateCallNumber(db.getAvailableBooks(), db.getAvailableVideos(), callNum);
                             if(isValidCallNum == 0 || isValidCallNum == -1){
                                 System.out.println("Call Number is invalid or book is already checked in");
@@ -544,9 +539,7 @@ public class MenuScreen {
                             else{
                                 System.out.println(db.checkInBook(callNum));
                             }
-=======
-                            System.out.println(db.checkInBook(callNum));
->>>>>>> main
+
                             System.out.println("Enter video call number");
                             try{
                                 callNum = login.nextDouble();
@@ -634,11 +627,8 @@ public class MenuScreen {
                                 LocalDate dueDate = LocalDate.now().plusWeeks(2);
                                 vReserve.setDueDate(dueDate);
                                 db.checkOutVideo(vReserve);
-<<<<<<< HEAD
                                 System.out.println("Video Checked Out and is due on: " + dueDate);
-=======
-                                System.out.println("Video Checked Out and is due on: " + date3);
->>>>>>> main
+
                                 break;
                             }
                         }
