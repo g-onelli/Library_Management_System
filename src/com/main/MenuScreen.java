@@ -786,6 +786,7 @@ public class MenuScreen {
             
         }
         else {
+        	System.out.println("Invalid Input");
             MenuDisplay.closingProgram();
             MenuDisplay.exitMessage();
         }
