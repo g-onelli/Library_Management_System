@@ -13,7 +13,7 @@ Team Members:
 - View/Register/Remove Patrons
 - Search books and videos
 
-**Gabriella Onelli**
+**Gabriela Onelli**
   *Tasks Assigned*
 - View/Add/Remove/Edit Events 
 - View/Complete Book Requests 
