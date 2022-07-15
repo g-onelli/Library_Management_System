@@ -277,7 +277,7 @@ public class DB {
 		}
 		dbClose();
 		System.out.println("");
-		System.out.println("Returning to librarian menu.");
+		System.out.println("Returning to event menu.");
 		System.out.println("");
 	}
 	
@@ -299,7 +299,7 @@ public class DB {
 		}
 		dbClose();
 		System.out.println("");
-		System.out.println("Returning to librarian menu.");
+		System.out.println("Returning to event menu.");
 		System.out.println("");
 	}
 	
@@ -319,11 +319,10 @@ public class DB {
 		}
 		dbClose();
 		System.out.println("");
-		System.out.println("Returning to librarian menu.");
+		System.out.println("Returning to event menu.");
 		System.out.println("");
 		
 	}
-
 	public List<video> showVideos() {
 		dbConnect();
 		String sql = "select * from videos";
@@ -736,7 +735,7 @@ public class DB {
 			e.printStackTrace();
 		}
 		System.out.println("");
-		System.out.println("Returning to librarian menu.");
+		System.out.println("Returning to requests menu.");
 		System.out.println("");
 		dbClose();
 	}
