@@ -2,7 +2,7 @@
 package com.main;
 
 import java.util.ArrayList;
-
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -649,6 +649,8 @@ public class MenuScreen {
                                     System.out.println("Checking in book, video, or both?");
                                     double callNum;
                                     String choice = login.next();
+                                    BookAndVideoUtility itemUtil = new BookAndVideoUtility();
+                                    int isValidCallNum;
                                     if (choice.equalsIgnoreCase("book")) {
                                         System.out.println("Enter book call number");
                                         try{
@@ -659,8 +661,14 @@ public class MenuScreen {
                                             login.next();
                                             break;
                                         }
-                                        System.out.println(db.checkInBook(callNum));
-                                        break;
+                                        isValidCallNum = itemUtil.validateCallNumber(db.getAvailableBooks(), db.getAvailableVideos(), callNum);
+                                        if(isValidCallNum == 0 || isValidCallNum == -1){
+                                            System.out.println("Call Number is invalid or book is already checked in");
+                                        }
+                                        else{
+                                            System.out.println(db.checkInBook(callNum));
+                                            break;
+                                        }
                                     } else if (choice.equalsIgnoreCase("video")) {
                                         System.out.println("Enter video call number");
                                         try{
@@ -671,8 +679,14 @@ public class MenuScreen {
                                             login.next();
                                             break;
                                         }
-                                        System.out.println(db.checkInVideo(callNum));
-                                        break;
+                                        isValidCallNum = itemUtil.validateCallNumber(db.getAvailableBooks(), db.getAvailableVideos(), callNum);
+                                        if(isValidCallNum == 1 || isValidCallNum == -1){
+                                            System.out.println("Call Number is invalid or video is already checked in");
+                                        }
+                                        else{
+                                            System.out.println(db.checkInVideo(callNum));
+                                            break;
+                                        }
 
                                     } else if (choice.equalsIgnoreCase("both")) {
                                         System.out.println("Enter book call number");
@@ -684,7 +698,13 @@ public class MenuScreen {
                                             login.next();
                                             break;
                                         }
-                                        System.out.println(db.checkInBook(callNum));
+                                        isValidCallNum = itemUtil.validateCallNumber(db.getAvailableBooks(), db.getAvailableVideos(), callNum);
+                                        if(isValidCallNum == 0 || isValidCallNum == -1){
+                                            System.out.println("Call Number is invalid or book is already checked in");
+                                        }
+                                        else{
+                                            System.out.println(db.checkInBook(callNum));
+                                        }
                                         System.out.println("Enter video call number");
                                         try{
                                             callNum = login.nextDouble();
@@ -694,7 +714,13 @@ public class MenuScreen {
                                             login.next();
                                             break;
                                         }
-                                        System.out.println(db.checkInVideo(callNum));
+                                        isValidCallNum = itemUtil.validateCallNumber(db.getAvailableBooks(), db.getAvailableVideos(), callNum);
+                                        if(isValidCallNum == 1 || isValidCallNum == -1){
+                                            System.out.println("Call Number is invalid or video is already checked in");
+                                        }
+                                        else{
+                                            System.out.println(db.checkInVideo(callNum));
+                                        }
                                     }
                                     else{
                                         System.out.println("Invalid input, returning to menu");
@@ -734,26 +760,24 @@ public class MenuScreen {
                                             login.next();
                                             break;
                                         }
-                                        BookAndVideoUtility itemUtil = new BookAndVideoUtility();
-                                        int isValidCallNum = itemUtil.validateCallNumber(db.getAvailableBooks(), db.getAvailableVideos(), callNum);
-                                        if (isValidCallNum == -1) {
+                                        itemUtil = new BookAndVideoUtility();
+                                        isValidCallNum = itemUtil.validateCallNumber(db.getAvailableBooks(), db.getAvailableVideos(), callNum);
+                                        if (isValidCallNum == -1 || isValidCallNum == 3) {
                                             System.out.println("Invalid Call Number or the item is checked out, Try Again");
                                         } else if (isValidCallNum == 0) {
+                                        	checkedOutBook bReserve = new checkedOutBook();
                                             book b = new book();
                                             for (book bList : availBooks) {
                                                 if (bList.getCallNumber() == callNum) {
                                                     b = bList;
                                                 }
                                             }
-                                            checkedOutBook bReserve = new checkedOutBook();
                                             bReserve.setPatrons_id(id);
                                             bReserve.setBooks_id(b.getId());
-                                            long millis2 = System.currentTimeMillis();
-                                            java.sql.Date date2 = new java.sql.Date(millis2);
-                                            bReserve.setDueDate(date2);
+                                            LocalDate dueDate = LocalDate.now().plusWeeks(2);
+                                            bReserve.setDueDate(dueDate);
                                             db.checkoutBook(bReserve);
-                                            System.out.println("Book Checked Out and is due on: " + date2);
-                                            break;
+                                            System.out.println("Book Checked Out and is due on: " + dueDate);                                            break;
                                         } else if (isValidCallNum == 1) {
                                             checkedOutVideo vReserve = new checkedOutVideo();
                                             video v = new video();
@@ -764,13 +788,10 @@ public class MenuScreen {
                                             }
                                             vReserve.setPatrons_id(id);
                                             vReserve.setVideos_id(v.getId());
-                                            long millis3 = System.currentTimeMillis();
-                                            java.sql.Date date3 = new java.sql.Date(millis3);
-                                            System.out.println(date3);
-                                            vReserve.setDueDate(date3);
+                                            LocalDate dueDate = LocalDate.now().plusWeeks(2);
+                                            vReserve.setDueDate(dueDate);
                                             db.checkOutVideo(vReserve);
-                                            System.out.println("Video Checked Out and is due on: " + date3);
-                                            break;
+                                            System.out.println("Video Checked Out and is due on: " + dueDate);                                            break;
                                         }
                                     }
                                     break;

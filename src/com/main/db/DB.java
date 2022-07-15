@@ -577,7 +577,7 @@ public class DB {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, bReserve.getPatrons_id());
 			pstmt.setInt(2, bReserve.getBooks_id());
-			pstmt.setDate(3, bReserve.getDueDate());
+			pstmt.setString(3, bReserve.getDueDate().toString());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -593,7 +593,7 @@ public class DB {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, vReserve.getPatrons_id());
 			pstmt.setInt(2, vReserve.getVideos_id());
-			pstmt.setDate(3, vReserve.getDueDate());
+			pstmt.setString(3, vReserve.getDueDate().toString());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
