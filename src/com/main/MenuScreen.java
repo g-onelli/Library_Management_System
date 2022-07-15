@@ -221,79 +221,88 @@ public class MenuScreen {
                         }
                         break;
                     case 4:
-						MenuDisplay.eventMenuDisplay();
-						int eventInput = loginChoice.nextInt();
+                    	while(true){
+                    		MenuDisplay.eventMenuDisplay();
+    						int eventInput = loginChoice.nextInt();
+    						if(eventInput==0) {
+    							System.out.println("");
+    							System.out.println("Returning to librarian menu.");
+    							System.out.println("");
+    							break;
+    						}
+    						switch(eventInput) {
+    							case 1:
+    								List<event> eventList = db.fetchEvents();
+    								for(event e: eventList) {
+    									System.out.println(e);
+    								}
+    								break;
+    							case 2:
+    								System.out.println("Please input the event id: ");
+    								loginChoice.nextLine();
+    								String eventID = loginChoice.nextLine();
+    								
+    								System.out.println("Please input the field you would like to alter(date,description,title):");
+    								String modField = loginChoice.nextLine();
+    								
+    								System.out.println("Please input the new value for the selected field: ");
+    								String modValue = loginChoice.nextLine();
+    								db.editEvent(eventID,modField,modValue);
+    								break;
+    							case 3:
+    								loginChoice.nextLine();
+    								System.out.println("Please input title: ");
+    								String title = loginChoice.nextLine();
+    								System.out.println("Please input description: ");
+    								String description = loginChoice.nextLine();
+    								System.out.println("Please input date: ");
+    								String date = loginChoice.nextLine();
+    								System.out.println("Please input personal id number: ");
+    								int libId = loginChoice.nextInt();
+    								db.addEvent(date, description, title, libId);
+    								break;
+    							case 4:
+    								System.out.println("Please input the id value of the event you wish to delete: ");
+    								int idNum = loginChoice.nextInt();
+    								db.deleteEvent(idNum);
+    								break;
+    							default:
+    								System.out.println("");
+    								System.out.println("Returning to librarian menu.");
+    								System.out.println("");
+    								break;
+    						}
+                    	}
+                    	break;
 						
-						switch(eventInput) {
-							case 1:
-								List<event> eventList = db.fetchEvents();
-								for(event e: eventList) {
-									System.out.println(e);
-								}
-								System.out.println("");
-								System.out.println("Returning to librarian menu.");
-								System.out.println("");
-								break;
-							case 2:
-								System.out.println("Please input the event id: ");
-								loginChoice.nextLine();
-								String eventID = loginChoice.nextLine();
-								
-								System.out.println("Please input the field you would like to alter(date,description,title):");
-								String modField = loginChoice.nextLine();
-								
-								System.out.println("Please input the new value for the selected field: ");
-								String modValue = loginChoice.nextLine();
-								db.editEvent(eventID,modField,modValue);
-								break;
-							case 3:
-								loginChoice.nextLine();
-								System.out.println("Please input title: ");
-								String title = loginChoice.nextLine();
-								System.out.println("Please input description: ");
-								String description = loginChoice.nextLine();
-								System.out.println("Please input date: ");
-								String date = loginChoice.nextLine();
-								System.out.println("Please input personal id number: ");
-								int libId = loginChoice.nextInt();
-								db.addEvent(date, description, title, libId);
-								break;
-							case 4:
-								System.out.println("Please input the id value of the event you wish to delete: ");
-								int idNum = loginChoice.nextInt();
-								db.deleteEvent(idNum);
-								break;
-							default:
-								System.out.println("Returning to librarian menu");
-								break;
-						}
-						break;
 					case 5:
-						MenuDisplay.requestMenuDisplay();
-						int requestChoice = loginChoice.nextInt();
-						if(requestChoice==1) {
-							List<request> reqList=db.checkRequests();
-							for(request r: reqList) {
-								System.out.println(r);
-							}
-							System.out.println("");
-							System.out.println("Returning to librarian menu.");
-							System.out.println("");
-						}else if(requestChoice==2) {
-							System.out.println("Please input the id of the request that is being filled out: ");
-							int id = loginChoice.nextInt();
-							loginChoice.nextLine();
-							System.out.println("Please input the book's publisher: ");
-							String pub = loginChoice.nextLine();
-							System.out.println("Please input the genre of the book: ");
-							String genre = loginChoice.nextLine();
-							System.out.println("Please input the library's call number for the book, max 4 numbers: ");
-							double callNum = loginChoice.nextDouble();
-							db.confirmRequest(id, genre,pub,callNum);
-						}else {
-							System.out.println("Returning to librarian menu");
+						while(true) {
+							MenuDisplay.requestMenuDisplay();
+							int requestChoice = loginChoice.nextInt();
+							if(requestChoice==1) {
+								List<request> reqList=db.checkRequests();
+								for(request r: reqList) {
+									System.out.println(r);
+								}
+
+							}else if(requestChoice==2) {
+								System.out.println("Please input the id of the request that is being filled out: ");
+								int id = loginChoice.nextInt();
+								loginChoice.nextLine();
+								System.out.println("Please input the book's publisher: ");
+								String pub = loginChoice.nextLine();
+								System.out.println("Please input the genre of the book: ");
+								String genre = loginChoice.nextLine();
+								System.out.println("Please input the library's call number for the book, max 4 numbers: ");
+								double callNum = loginChoice.nextDouble();
+								db.confirmRequest(id, genre,pub,callNum);
+							}else {
+								System.out.println("");
+								System.out.println("Returning to librarian menu");
+								System.out.println("");
+								break;
+							}		
 						}
-						
 						break;
 					case 6:
 						loginChoice.nextLine();
