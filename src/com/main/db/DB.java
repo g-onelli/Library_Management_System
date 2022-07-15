@@ -5,23 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
-import java.time.LocalDate;
-
-import com.entityClasses.book;
-import com.entityClasses.librarian;
-import com.entityClasses.patron;
-import com.entityClasses.request;
-import com.entityClasses.room;
-import com.entityClasses.video;
-import com.entityClasses.checkedOutRoom;
+import com.entityClasses.*;
 import com.main.utility.PatronUtility;
-import com.entityClasses.event;
 
 public class DB {
 	Connection con;
@@ -145,9 +134,49 @@ public class DB {
 		return "Successfully removed patron.";
 	}
 
+	public patron fetchPatron(int input) {
+		dbConnect();
+		patron onePatron = new patron();
+		String sqlCmd = "select * from patrons where id=?";
+		try {
+			PreparedStatement cmd = con.prepareStatement(sqlCmd);
+			cmd.setInt(1, input);
+			ResultSet result = cmd.executeQuery();
+			result.next();
+			// public patron(int id, String name, String cardExpirationDate, double balance,
+			// String password)
+			onePatron = new patron(result.getInt("id"), result.getString("name"),
+					result.getString("cardExpirationDate"), result.getDouble("balance"), result.getString("password"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return onePatron;
+	}
 
+	public void changeExpirationDate(int id, String newDate) {
+		PatronUtility utility = new PatronUtility();
+		String cmdSQL = "update patrons SET name=?, cardExpirationDate=?, balance=?, password=?";
+		boolean idCheck = utility.validateId(showPatrons(), id);
+		if (idCheck) {
+			patron tempPat = fetchPatron(id);
+			try {
+				PreparedStatement cmd = con.prepareStatement(cmdSQL);
+				cmd.setString(1, tempPat.getName());
+				cmd.setString(2, newDate);
+				cmd.setDouble(3, tempPat.getBalance());
+				cmd.setString(4, tempPat.getPassword());
+				cmd.executeUpdate();
+				System.out.println("Your card expiration date has been extended to " + newDate);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Sorry, we could not find a patron with that id. Please recheck input.");
+		}
+
+		dbClose();
+	}
 	public List<String> showRooms() {
-
 		dbConnect();
 		String sql = "select * from rooms";
 		List<String> list = new ArrayList<>();
@@ -427,8 +456,10 @@ public class DB {
 		dbConnect();
 
 		List<String> list = new ArrayList<>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		long diff;
+		long days;
+
+
+
 
 		String sql = "select title, callNumber, dueDate from books b, checkedoutbooks cb where cb.books_id = b.id and cb.patrons_id = ? and dueDate < ?";
 
@@ -437,35 +468,28 @@ public class DB {
 			pStmt.setInt(1, id);
 			pStmt.setString(2, java.time.LocalDate.now().toString());
 			ResultSet rst = pStmt.executeQuery();
-			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
-			Date secondDate;
-			if (!rst.next())
-				diff = 0;
-			else {
-				secondDate = sdf.parse(rst.getString("dueDate"));
-				diff = secondDate.getTime() - firstDate.getTime();
-			}
+			LocalDate local = java.time.LocalDate.now();
+			LocalDate due;
 			while (rst.next()) {
+				due = LocalDate.parse(rst.getString("dueDate"));
+				days = ChronoUnit.DAYS.between(due, local);
 
-				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber")
-						+ ", Days Overdue: " + diff);
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + days);
 			}
 
-		} catch (SQLException | ParseException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 		dbClose();
 		return list;
 	}
-
 	public List<String> fetchOverdueVideos(int id) {
 
 		dbConnect();
 
 		List<String> list = new ArrayList<>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		long diff;
+		long days;
 
 		String sql = "select title, callNumber, dueDate from videos v, checkedoutvideos cv where cv.videos_id = v.id and cv.patrons_id = ? and dueDate < ?";
 
@@ -474,21 +498,17 @@ public class DB {
 			pStmt.setInt(1, id);
 			pStmt.setString(2, java.time.LocalDate.now().toString());
 			ResultSet rst = pStmt.executeQuery();
-			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
-			Date secondDate;
-			if (!rst.next())
-				diff = 0;
-			else {
-				secondDate = sdf.parse(rst.getString("dueDate"));
-				diff = secondDate.getTime() - firstDate.getTime();
-			}
+			LocalDate local = java.time.LocalDate.now();
+			LocalDate due;
 
 			while (rst.next()) {
-				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber")
-						+ ", Days Overdue: " + diff);
+				due = LocalDate.parse(rst.getString("dueDate"));
+				days = ChronoUnit.DAYS.between(due, local);
+
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + days);
 			}
 
-		} catch (SQLException | ParseException e) {
+		} catch (SQLException e ) {
 			e.printStackTrace();
 		}
 
@@ -605,14 +625,9 @@ public class DB {
 		}
 		dbClose();
 		return list;
-	
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-		return list;
 	}
+
 
 	public void reserveRoom(checkedOutRoom reserve) {
 		dbConnect();
@@ -705,7 +720,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-public List<video> searchVideos(String tag, String term) {
+ 	public List<video> searchVideos(String tag, String term) {
 		dbConnect();
 		List<video> list = new ArrayList<>();
 		String searchTag = "";
