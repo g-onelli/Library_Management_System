@@ -123,7 +123,7 @@ public class DB {
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setInt(1, id);
-			System.out.println(pstmt);
+			//System.out.println(pstmt);
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -761,7 +761,7 @@ public class DB {
 			String sqlCmd = "select * from books where "+ searchTag +"=?";
 			PreparedStatement pstmt = con.prepareStatement(sqlCmd);
 			pstmt.setString(1, term);
-			System.out.println(pstmt);
+			//System.out.println(pstmt);
 			ResultSet result = pstmt.executeQuery();
 
 			while (result.next()) {
