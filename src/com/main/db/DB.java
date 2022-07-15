@@ -88,7 +88,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-
+  
 	public List<patron> showPatrons() {
 		dbConnect();
 		String sql = "select * from patrons";
@@ -145,50 +145,9 @@ public class DB {
 		return "Successfully removed patron.";
 	}
 
-	public patron fetchPatron(int input) {
-		dbConnect();
-		patron onePatron = new patron();
-		String sqlCmd = "select * from patrons where id=?";
-		try {
-			PreparedStatement cmd = con.prepareStatement(sqlCmd);
-			cmd.setInt(1, input);
-			ResultSet result = cmd.executeQuery();
-			result.next();
-			// public patron(int id, String name, String cardExpirationDate, double balance,
-			// String password)
-			onePatron = new patron(result.getInt("id"), result.getString("name"),
-					result.getString("cardExpirationDate"), result.getDouble("balance"), result.getString("password"));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return onePatron;
-	}
-
-	public void changeExpirationDate(int id, String newDate) {
-		PatronUtility utility = new PatronUtility();
-		String cmdSQL = "update patrons SET name=?, cardExpirationDate=?, balance=?, password=?";
-		boolean idCheck = utility.validateId(showPatrons(), id);
-		if (idCheck) {
-			patron tempPat = fetchPatron(id);
-			try {
-				PreparedStatement cmd = con.prepareStatement(cmdSQL);
-				cmd.setString(1, tempPat.getName());
-				cmd.setString(2, newDate);
-				cmd.setDouble(3, tempPat.getBalance());
-				cmd.setString(4, tempPat.getPassword());
-				cmd.executeUpdate();
-				System.out.println("Your card expiration date has been extended to " + newDate);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			System.out.println("Sorry, we could not find a patron with that id. Please recheck input.");
-		}
-
-		dbClose();
-	}
 
 	public List<String> showRooms() {
+
 		dbConnect();
 		String sql = "select * from rooms";
 		List<String> list = new ArrayList<>();
@@ -536,6 +495,75 @@ public class DB {
 		dbClose();
 		return list;
 	}
+  
+  	public List<book> getAvailableBooks(){
+		dbConnect();
+		String sql = "select * from books where id NOT IN (select books_id from checkedoutbooks);";
+		List<book> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+
+			while(rst.next()) {
+				list.add(new book(rst.getInt("id"),rst.getString("title"),rst.getString("author"), rst.getString("publisher"), rst.getDouble("callNumber"), rst.getString("genre")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	}
+
+	public List<video> getAvailableVideos(){
+		dbConnect();
+		String sql = "select * from videos where id NOT IN (select videos_id from checkedoutvideos);";
+		List<video> list = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rst = pstmt.executeQuery();
+
+			while(rst.next()) {
+				list.add(new video(rst.getInt("id"),rst.getString("title"),rst.getString("director"), rst.getString("releaseDate"), rst.getDouble("callNumber"), rst.getString("genre")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	}
+
+
+	public void checkoutBook(checkedOutBook bReserve) {
+		dbConnect();
+		String sql = "insert into checkedOutBooks(patrons_id,books_id,dueDate) "
+				+ "values (?,?,?)";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, bReserve.getPatrons_id());
+			pstmt.setInt(2, bReserve.getBooks_id());
+			pstmt.setDate(3, bReserve.getDueDate());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+	}
+
+	public void checkOutVideo(checkedOutVideo vReserve) {
+		dbConnect();
+		String sql = "insert into checkedoutvideos(patrons_id,videos_id,dueDate) "
+				+ "values (?,?,?)";
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, vReserve.getPatrons_id());
+			pstmt.setInt(2, vReserve.getVideos_id());
+			pstmt.setDate(3, vReserve.getDueDate());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+	}
 
 	public List<String> showFreeRooms() {
 		dbConnect();
@@ -571,6 +599,13 @@ public class DB {
 				list.add(new room(rst.getInt("roomNumber"), rst.getInt("capacity"), rst.getInt("hasPresenterTools")));
 
 			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		return list;
+	
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -670,8 +705,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-
-	public List<video> searchVideos(String tag, String term) {
+public List<video> searchVideos(String tag, String term) {
 		dbConnect();
 		List<video> list = new ArrayList<>();
 		String searchTag = "";
@@ -703,4 +737,38 @@ public class DB {
 		dbClose();
 		return list;
 	}
+  	public String checkInBook(double callNum) {
+		dbConnect();
+		String sql = "delete cb from checkedoutbooks cb left join books b on b.id = cb.books_id where callNumber = ?";
+		PreparedStatement pstmt;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setDouble(1, callNum);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			dbClose();
+			return "The book was never checked out, or was already checked back in.";
+		}
+		dbClose();
+		return "Successfully checked in.";
+	}
+
+	public String checkInVideo(double callNum) {
+		dbConnect();
+		String sql = "delete cv from checkedoutvideos cv left join videos v on v.id = cv.videos_id where callNumber = ?;";
+		PreparedStatement pstmt;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setDouble(1, callNum);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			dbClose();
+			return "The video was never checked out, or was already checked back in.";
+		}
+		dbClose();
+		return "Successfully checked in.";
+	}
+  
 }
