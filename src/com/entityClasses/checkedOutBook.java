@@ -1,17 +1,17 @@
 package com.entityClasses;
 
-import java.sql.Date;
+import java.sql.Date;import java.time.LocalDate;
 
 public class checkedOutBook {
     private int patrons_id;
     private int books_id;
-    private Date dueDate;
+    private LocalDate dueDate;
 
     public checkedOutBook() {
         super();
     }
 
-    public checkedOutBook(int patrons_id, int books_id, Date dueDate) {
+    public checkedOutBook(int patrons_id, int books_id, LocalDate dueDate) {
         super();
         this.patrons_id = patrons_id;
         this.books_id = books_id;
@@ -40,11 +40,11 @@ public class checkedOutBook {
         this.books_id = books_id;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date date) {
+    public void setDueDate(LocalDate date) {
         this.dueDate = date;
     }
 }
