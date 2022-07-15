@@ -13,34 +13,43 @@ import java.util.List;
 import java.util.Date;
 import java.time.LocalDate;
 
-import com.entityClasses.*;
+import com.entityClasses.book;
+import com.entityClasses.librarian;
+import com.entityClasses.patron;
+import com.entityClasses.request;
+import com.entityClasses.room;
+import com.entityClasses.video;
+import com.entityClasses.checkedOutRoom;
 import com.main.utility.PatronUtility;
-
+import com.entityClasses.event;
 
 public class DB {
 	Connection con;
+
 	public void dbConnect() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			//System.out.println("Driver loaded...");
+			// System.out.println("Driver loaded...");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_schema","root","Password123");
-			//System.out.println("Connection Established...");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_schema", "root", "Password123");
+			// System.out.println("Connection Established...");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+
 	public void dbClose() {
 		try {
 			con.close();
-			//System.out.println("Connection Closed...");
+			// System.out.println("Connection Closed...");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+
 	public List<librarian> showLibrarians() {
 		dbConnect();
 		String sql = "select * from librarians";
@@ -60,6 +69,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
+
 	public List<book> showBooks() {
 		dbConnect();
 		String sql = "select * from books";
@@ -78,7 +88,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	
+
 	public List<patron> showPatrons() {
 		dbConnect();
 		String sql = "select * from patrons";
@@ -97,7 +107,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	
+
 	public String insertPatron(patron newPatron) {
 		dbConnect();
 		String sql = "insert into patrons (name,cardExpirationDate,balance,password) values (?,?,?,?)";
@@ -116,7 +126,7 @@ public class DB {
 		dbClose();
 		return "Succesfully inserted Patron.";
 	}
-	
+
 	public String removePatron(int id) {
 		dbConnect();
 		String sql = "delete from patrons where id=?";
@@ -134,14 +144,14 @@ public class DB {
 		dbClose();
 		return "Successfully removed patron.";
 	}
-	
+
 	public patron fetchPatron(int input) {
 		dbConnect();
 		patron onePatron = new patron();
 		String sqlCmd = "select * from patrons where id=?";
 		try {
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
-			cmd.setInt(1,input);
+			cmd.setInt(1, input);
 			ResultSet result = cmd.executeQuery();
 			result.next();
 			// public patron(int id, String name, String cardExpirationDate, double balance,
@@ -153,7 +163,7 @@ public class DB {
 		}
 		return onePatron;
 	}
-	
+
 	public void changeExpirationDate(int id, String newDate) {
 		PatronUtility utility = new PatronUtility();
 		String cmdSQL = "update patrons SET name=?, cardExpirationDate=?, balance=?, password=?";
@@ -174,7 +184,7 @@ public class DB {
 		} else {
 			System.out.println("Sorry, we could not find a patron with that id. Please recheck input.");
 		}
-		
+
 		dbClose();
 	}
 
@@ -196,8 +206,8 @@ public class DB {
 		dbClose();
 		return list;
 	}
-	
-	public List<event> fetchEvents(){//returns a list of all events being hosted by the library
+
+	public List<event> fetchEvents() {// returns a list of all events being hosted by the library
 		dbConnect();
 		List<event> eventList = new ArrayList<>();
 		try {
@@ -224,7 +234,7 @@ public class DB {
 		String sqlCmd = "select * from events where id=?";
 		try {
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
-			cmd.setInt(1,idNum);
+			cmd.setInt(1, idNum);
 			ResultSet result = cmd.executeQuery();
 			result.next();
 			oneEvent = new event(result.getInt("id"), result.getString("date"), result.getString("description"),
@@ -232,37 +242,37 @@ public class DB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return oneEvent;
 	}
-	
+
 	public void editEvent(String eventId, String modField, String modValue) {
 		event modEvent = fetchEvent(eventId);
 		String cmdSQL = "update events SET date=?, description=?, title=? where id=?";
 		try {
 			PreparedStatement cmd = con.prepareStatement(cmdSQL);
-			switch(modField) {
-				case "date":
-					cmd.setString(1, modValue);
-					cmd.setString(2, modEvent.getDescription());
-					cmd.setString(3, modEvent.getTitle());
-					cmd.setInt(4, modEvent.getId());
-					break;
-				case "title":
-					cmd.setString(1, modEvent.getDate());
-					cmd.setString(2, modEvent.getDescription());
-					cmd.setString(3, modValue);
-					cmd.setInt(4, modEvent.getId());
-					break;
-				case "description":
-					cmd.setString(1, modEvent.getDate());
-					cmd.setString(2, modValue);
-					cmd.setString(3, modEvent.getTitle());
-					cmd.setInt(4, modEvent.getId());
-					break;
-				default:
-					System.out.println("That is not a field that is accepted. Please try again.");
-					break;
+			switch (modField) {
+			case "date":
+				cmd.setString(1, modValue);
+				cmd.setString(2, modEvent.getDescription());
+				cmd.setString(3, modEvent.getTitle());
+				cmd.setInt(4, modEvent.getId());
+				break;
+			case "title":
+				cmd.setString(1, modEvent.getDate());
+				cmd.setString(2, modEvent.getDescription());
+				cmd.setString(3, modValue);
+				cmd.setInt(4, modEvent.getId());
+				break;
+			case "description":
+				cmd.setString(1, modEvent.getDate());
+				cmd.setString(2, modValue);
+				cmd.setString(3, modEvent.getTitle());
+				cmd.setInt(4, modEvent.getId());
+				break;
+			default:
+				System.out.println("That is not a field that is accepted. Please try again.");
+				break;
 			}
 			cmd.executeUpdate();
 			System.out.println("Your event has now been updated");
@@ -270,7 +280,7 @@ public class DB {
 			e.printStackTrace();
 		}
 		dbClose();
-		
+
 	}
 
 	public void addEvent(String date, String descrption, String title, int libID) {
@@ -282,14 +292,14 @@ public class DB {
 			cmd.setString(2, descrption);
 			cmd.setString(3, title);
 			cmd.setInt(4, libID);
-			
+
 			cmd.executeUpdate();
 			System.out.println("Your event has been added to the database");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
-		
+
 	}
 
 	public void deleteEvent(int id) {
@@ -458,10 +468,8 @@ public class DB {
 		dbConnect();
 
 		List<String> list = new ArrayList<>();
-		long days;
-
-
-
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		long diff;
 
 		String sql = "select title, callNumber, dueDate from books b, checkedoutbooks cb where cb.books_id = b.id and cb.patrons_id = ? and dueDate < ?";
 
@@ -470,28 +478,35 @@ public class DB {
 			pStmt.setInt(1, id);
 			pStmt.setString(2, java.time.LocalDate.now().toString());
 			ResultSet rst = pStmt.executeQuery();
-			LocalDate local = java.time.LocalDate.now();
-			LocalDate due;
+			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
+			Date secondDate;
+			if (!rst.next())
+				diff = 0;
+			else {
+				secondDate = sdf.parse(rst.getString("dueDate"));
+				diff = secondDate.getTime() - firstDate.getTime();
+			}
 			while (rst.next()) {
-				due = LocalDate.parse(rst.getString("dueDate"));
-				days = ChronoUnit.DAYS.between(due, local);
 
-				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + days);
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber")
+						+ ", Days Overdue: " + diff);
 			}
 
-		} catch (SQLException e) {
+		} catch (SQLException | ParseException e) {
 			e.printStackTrace();
 		}
 
 		dbClose();
 		return list;
 	}
+
 	public List<String> fetchOverdueVideos(int id) {
 
 		dbConnect();
 
 		List<String> list = new ArrayList<>();
-		long days;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		long diff;
 
 		String sql = "select title, callNumber, dueDate from videos v, checkedoutvideos cv where cv.videos_id = v.id and cv.patrons_id = ? and dueDate < ?";
 
@@ -500,144 +515,49 @@ public class DB {
 			pStmt.setInt(1, id);
 			pStmt.setString(2, java.time.LocalDate.now().toString());
 			ResultSet rst = pStmt.executeQuery();
-			LocalDate local = java.time.LocalDate.now();
-			LocalDate due;
+			Date firstDate = sdf.parse(java.time.LocalDate.now().toString());
+			Date secondDate;
+			if (!rst.next())
+				diff = 0;
+			else {
+				secondDate = sdf.parse(rst.getString("dueDate"));
+				diff = secondDate.getTime() - firstDate.getTime();
+			}
 
 			while (rst.next()) {
-				due = LocalDate.parse(rst.getString("dueDate"));
-				days = ChronoUnit.DAYS.between(due, local);
-
-				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber") + ", Days Overdue: " + days);
+				list.add("Title: " + rst.getString("title") + ", " + "Call Number: " + rst.getString("callNumber")
+						+ ", Days Overdue: " + diff);
 			}
 
-		} catch (SQLException e ) {
+		} catch (SQLException | ParseException e) {
 			e.printStackTrace();
 		}
 
 		dbClose();
 		return list;
-	}
-
-	public List<book> getAvailableBooks(){
-		dbConnect();
-		String sql = "select * from books where id NOT IN (select books_id from checkedoutbooks);";
-		List<book> list = new ArrayList<>();
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			ResultSet rst = pstmt.executeQuery();
-
-			while(rst.next()) {
-				list.add(new book(rst.getInt("id"),rst.getString("title"),rst.getString("author"), rst.getString("publisher"), rst.getDouble("callNumber"), rst.getString("genre")));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		dbClose();
-		return list;
-	}
-
-	public List<video> getAvailableVideos(){
-		dbConnect();
-		String sql = "select * from videos where id NOT IN (select videos_id from checkedoutvideos);";
-		List<video> list = new ArrayList<>();
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			ResultSet rst = pstmt.executeQuery();
-
-			while(rst.next()) {
-				list.add(new video(rst.getInt("id"),rst.getString("title"),rst.getString("director"), rst.getString("releaseDate"), rst.getDouble("callNumber"), rst.getString("genre")));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-		return list;
-	}
-
-	public void checkoutBook(checkedOutBook bReserve) {
-		dbConnect();
-		String sql = "insert into checkedOutBooks(patrons_id,books_id,dueDate) "
-				+ "values (?,?,?)";
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, bReserve.getPatrons_id());
-			pstmt.setInt(2, bReserve.getBooks_id());
-			pstmt.setDate(3, bReserve.getDueDate());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-	}
-	public void checkOutVideo(checkedOutVideo vReserve) {
-		dbConnect();
-		String sql = "insert into checkedoutvideos(patrons_id,videos_id,dueDate) "
-				+ "values (?,?,?)";
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, vReserve.getPatrons_id());
-			pstmt.setInt(2, vReserve.getVideos_id());
-			pstmt.setDate(3, vReserve.getDueDate());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-	}
-	public String checkInBook(double callNum) {
-		dbConnect();
-		String sql = "delete cb from checkedoutbooks cb left join books b on b.id = cb.books_id where callNumber = ?";
-		PreparedStatement pstmt;
-		try {
-			pstmt = con.prepareStatement(sql);
-			pstmt.setDouble(1, callNum);
-			pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			dbClose();
-			return "The book was never checked out, or was already checked back in.";
-		}
-		dbClose();
-		return "Successfully checked in.";
-	}
-	public String checkInVideo(double callNum) {
-		dbConnect();
-		String sql = "delete cv from checkedoutvideos cv left join videos v on v.id = cv.videos_id where callNumber = ?;";
-		PreparedStatement pstmt;
-		try {
-			pstmt = con.prepareStatement(sql);
-			pstmt.setDouble(1, callNum);
-			pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			dbClose();
-			return "The video was never checked out, or was already checked back in.";
-		}
-		dbClose();
-		return "Successfully checked in.";
 	}
 
 	public List<String> showFreeRooms() {
 		dbConnect();
-		String sql = "select roomNumber, capacity, hasPresenterTools " + 
-				"from rooms " + 
-				"where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
+		String sql = "select roomNumber, capacity, hasPresenterTools " + "from rooms "
+				+ "where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
 		List<String> list = new ArrayList<>();
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			ResultSet rst = pstmt.executeQuery();
-			
-			while(rst.next()) {	
-				list.add("Room Number: " + rst.getInt("roomNumber") + ", " + "Capacity: " + rst.getInt("capacity") + ", PresenterTools: " + rst.getInt("hasPresenterTools"));						
+
+			while (rst.next()) {
+				list.add("Room Number: " + rst.getInt("roomNumber") + ", " + "Capacity: " + rst.getInt("capacity")
+						+ ", PresenterTools: " + rst.getInt("hasPresenterTools"));
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
 		return list;
 	}
+
 	public List<room> checkFreeRooms() {
 		dbConnect();
 		String sql = "select roomNumber, capacity, hasPresenterTools " + "from rooms "
@@ -720,7 +640,7 @@ public class DB {
 		String searchTag = "";
 		if(tag.equalsIgnoreCase("Genre")) {
 			searchTag = "genre";
-
+			
 		} else if (tag.equalsIgnoreCase("title")) {
 			searchTag = "title";
 		}
@@ -757,7 +677,7 @@ public class DB {
 		String searchTag = "";
 		if(tag.equalsIgnoreCase("Genre")) {
 			searchTag = "genre";
-
+			
 		} else if (tag.equalsIgnoreCase("title")) {
 			searchTag = "title";
 		}
