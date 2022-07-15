@@ -113,7 +113,7 @@ public class DB {
 			return "Failed to insert Patron.";
 		}
 		dbClose();
-		return "Succesfully inserted Patron.";
+		return "Successfully inserted Patron.";
 	}
 
 	public String removePatron(int id) {
@@ -276,9 +276,9 @@ public class DB {
 			e.printStackTrace();
 		}
 		dbClose();
-		System.out.println("");
+		System.out.println();
 		System.out.println("Returning to event menu.");
-		System.out.println("");
+		System.out.println();
 	}
 	
 	
@@ -298,9 +298,9 @@ public class DB {
 			e.printStackTrace();
 		}
 		dbClose();
-		System.out.println("");
+		System.out.println();
 		System.out.println("Returning to event menu.");
-		System.out.println("");
+		System.out.println();
 	}
 	
 	
@@ -318,9 +318,9 @@ public class DB {
 			e.printStackTrace();
 		}
 		dbClose();
-		System.out.println("");
+		System.out.println();
 		System.out.println("Returning to event menu.");
-		System.out.println("");
+		System.out.println();
 		
 	}
 	public List<video> showVideos() {
@@ -359,7 +359,7 @@ public class DB {
 			return "Failed to insert Book.";
 		}
 		dbClose();
-		return "Succesfully inserted Book.";
+		return "Successfully inserted Book.";
 	}
 
 	public String insertVideo(video temp) {
@@ -379,7 +379,7 @@ public class DB {
 			return "Failed to insert Video.";
 		}
 		dbClose();
-		return "Succesfully inserted Video.";
+		return "Successfully inserted Video.";
 	}
 
 	public String removeBook(int bookRem) {
@@ -732,9 +732,9 @@ public class DB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println("");
+		System.out.println();
 		System.out.println("Returning to requests menu.");
-		System.out.println("");
+		System.out.println();
 		dbClose();
 	}
 

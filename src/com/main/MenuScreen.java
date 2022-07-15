@@ -2,7 +2,6 @@
 package com.main;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -46,7 +45,7 @@ public class MenuScreen {
                     if (!isValidPass) {
                         System.out.println("Invalid Password, Try Again");
                     } else {
-                        System.out.println("Login Sucessful...");
+                        System.out.println("Login Successful...");
                         break;
                     }
                 }
@@ -73,7 +72,7 @@ public class MenuScreen {
                             switch (vid) {
                                 case 1:
                                     // Display all the books from the database
-                                    List<book> books = new ArrayList<>();
+                                    List<book> books;
                                     books = db.showBooks();
                                     for (book b : books) {
                                         System.out.println(b.toString());
@@ -81,7 +80,7 @@ public class MenuScreen {
                                     break;
                                 case 2:
                                     // Display all the videos from the database
-                                    List<video> videos = new ArrayList<>();
+                                    List<video> videos;
                                     videos = db.showVideos();
                                     for (video v : videos) {
                                         System.out.println(v.toString());
@@ -99,10 +98,10 @@ public class MenuScreen {
                                     String publisher = loginChoice.nextLine();
                                     System.out.println("Enter Book Call Number:");
                                     double callNum = loginChoice.nextDouble();
-                                    System.out.println("Enter Book Genere:");
+                                    System.out.println("Enter Book Genre:");
                                     loginChoice.nextLine();
-                                    String genere = loginChoice.nextLine();
-                                    temp = new book(0, title, author, publisher, callNum, genere);
+                                    String genre = loginChoice.nextLine();
+                                    temp = new book(0, title, author, publisher, callNum, genre);
                                     // Add book to database using the DB class
                                     System.out.println(db.insertBook(temp));
                                     break;
@@ -118,10 +117,10 @@ public class MenuScreen {
                                     String release = loginChoice.nextLine();
                                     System.out.println("Enter Video Call Number:");
                                     callNum = loginChoice.nextDouble();
-                                    System.out.println("Enter Video Genere:");
+                                    System.out.println("Enter Video Genre:");
                                     loginChoice.nextLine();
-                                    genere = loginChoice.nextLine();
-                                    tempVid = new video(0, title, director, release, callNum, genere);
+                                    genre = loginChoice.nextLine();
+                                    tempVid = new video(0, title, director, release, callNum, genre);
                                     // add video to database using db class
                                     System.out.println(db.insertVideo(tempVid));
                                     break;
@@ -187,7 +186,7 @@ public class MenuScreen {
                             switch (vMP) {
                                 case 1:
                                     // show all patrons
-                                    List<patron> pats = new ArrayList<>();
+                                    List<patron> pats;
                                     pats = db.showPatrons();
                                     System.out.println("List of Patrons:");
                                     for (patron p : pats) {
@@ -225,9 +224,9 @@ public class MenuScreen {
                     		MenuDisplay.eventMenuDisplay();
     						int eventInput = loginChoice.nextInt();
     						if(eventInput==0) {
-    							System.out.println("");
+    							System.out.println();
     							System.out.println("Returning to librarian menu.");
-    							System.out.println("");
+    							System.out.println();
     							break;
     						}
     						switch(eventInput) {
@@ -241,10 +240,10 @@ public class MenuScreen {
     								System.out.println("Please input the event id: ");
     								loginChoice.nextLine();
     								String eventID = loginChoice.nextLine();
-    								
+
     								System.out.println("Please input the field you would like to alter(date,description,title):");
     								String modField = loginChoice.nextLine();
-    								
+
     								System.out.println("Please input the new value for the selected field: ");
     								String modValue = loginChoice.nextLine();
     								db.editEvent(eventID,modField,modValue);
@@ -267,9 +266,9 @@ public class MenuScreen {
     								db.deleteEvent(idNum);
     								break;
     							default:
-    								System.out.println("");
+    								System.out.println();
     								System.out.println("Returning to librarian menu.");
-    								System.out.println("");
+    								System.out.println();
     								break;
     						}
                     	}
@@ -297,9 +296,9 @@ public class MenuScreen {
 								double callNum = loginChoice.nextDouble();
 								db.confirmRequest(id, genre,pub,callNum);
 							}else {
-								System.out.println("");
+								System.out.println();
 								System.out.println("Returning to librarian menu");
-								System.out.println("");
+								System.out.println();
 								break;
 							}		
 						}
@@ -337,7 +336,7 @@ public class MenuScreen {
                     if (!isValidPass) {
                         System.out.println("Invalid Password, Try Again");
                     } else {
-                        System.out.println("Login Sucessful...");
+                        System.out.println("Login Successful...");
                         patron_id = id;
                         break;
                     }
@@ -362,19 +361,23 @@ public class MenuScreen {
                             switch(patronInput) {
                                 case 1:
                                     // Display all the books from the database
-                                    List<book> books = new ArrayList<>();
+                                    List<book> books;
                                     books = db.showBooks();
-                                    for (book b : books) {
-                                        System.out.println(b.toString());
-                                    }
+                                    books.stream().forEach(e -> System.out.println( "Title: " + e.getTitle() + ", "
+                                            + "Author: " + e.getAuthor() + ", "
+                                            + "Publisher: " + e.getPublisher() + ", "
+                                            + "Call Number: " + e.getCallNumber() + ", "
+                                            + "Genre: " + e.getGenre()));
                                     break;
                                 case 2:
                                     // Display all the videos from the database
-                                    List<video> videos = new ArrayList<>();
+                                    List<video> videos;
                                     videos = db.showVideos();
-                                    for (video v : videos) {
-                                        System.out.println(v.toString());
-                                    }
+                                    videos.stream().forEach(e -> System.out.println("Title: "+  e.getTitle() + ", "
+                                            + "Director: " + e.getDirector() + ", "
+                                            + "ReleaseDate: " + e.getReleaseDate() + ", "
+                                            + "Call Number: " + e.getCallNumber() + ", "
+                                            + "Genre: "+ e.getGenre()));
                                     break;
                                 default:
                                     break;
