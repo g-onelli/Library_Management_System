@@ -27,7 +27,7 @@ public class MenuDisplay {
 	}
 	
 	public static void requestMenuDisplay() {
-		String reqMenu = "—------------Librarian Menu—-----------\r\n"
+		String reqMenu = "—------------Requests Menu—-----------\r\n"
 				+ "Welcome, username!\r\n"
 				+ "1. View book requests\r\n"
 				+ "2. Complete book requests\r\n"
