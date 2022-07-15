@@ -410,6 +410,7 @@ public class MenuScreen {
                                 System.out.println(s);
                             }
                         }
+			break;
                     case 4: // 4. Submit book requests
                         request request = new request();
                         System.out.println("Enter Book Title");
