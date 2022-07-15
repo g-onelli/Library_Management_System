@@ -30,7 +30,7 @@ public class MenuScreen {
         else if (loginInput == 1) {
             // Call switch statement for librarian menu
             while (true) {
-                System.out.println("------------Librarian Login-----------\\r\\n");
+                System.out.println("------------Librarian Login-----------\r\n");
                 System.out.println("Enter Id: ");
                 int id = login.nextInt();
                 LibrarianUtility util = new LibrarianUtility();

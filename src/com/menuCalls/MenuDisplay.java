@@ -13,7 +13,7 @@ public class MenuDisplay {
 
 	public static void libMenuDisplay() {
 		String libMenu = "—------------Librarian Menu—-----------\r\n"
-				+ "Welcome, username!\r\n"
+				+ "Welcome!\r\n"
 				+ "1. View video and book collections\r\n"
 				+ "2. View room collections\r\n"
 				+ "3. View/Modify Patrons\r\n"
@@ -28,7 +28,7 @@ public class MenuDisplay {
 	
 	public static void requestMenuDisplay() {
 		String reqMenu = "—------------Requests Menu—-----------\r\n"
-				+ "Welcome, username!\r\n"
+				+ "Welcome!\r\n"
 				+ "1. View book requests\r\n"
 				+ "2. Complete book requests\r\n"
 				+ "0. To Exit\r\n"
