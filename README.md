@@ -6,6 +6,7 @@ Team Members:
 - Add/Remove/View videos and books 
 - View Rooms
 - View/Register/Remove Patrons
+- Search books and videos
  
   *Tasks Completed*
 - Add/Remove/View videos and books 
@@ -18,7 +19,6 @@ Team Members:
 - View/Add/Remove/Edit Events 
 - View/Complete Book Requests 
 - Issue New Library Cards
-- Search books and videos
 
   *Tasks Completed*
 - View/Add/Remove/Edit Events 
