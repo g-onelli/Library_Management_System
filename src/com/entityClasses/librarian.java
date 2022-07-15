@@ -10,7 +10,7 @@ public class librarian {
     private String phoneNumber;
     private String password;
 
-    public librarian(){
+    public librarian(int i, String string, String string2, double d, String string3){
         super();
     }
 

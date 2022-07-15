@@ -7,7 +7,12 @@ public class patron {
     private double balance;
     private String password;
 
-    public String getPassword() {
+    public patron() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getPassword() {
 		return password;
 	}
 
