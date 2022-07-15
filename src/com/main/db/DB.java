@@ -70,6 +70,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
+	
 	public List<patron> showPatrons() {
 		dbConnect();
 		String sql = "select * from patrons";
@@ -87,7 +88,6 @@ public class DB {
 		dbClose();
 		return list;
 	}
-<<<<<<< Updated upstream
 
 	public patron getPatron(int id){
 		dbConnect();
@@ -137,8 +137,6 @@ public class DB {
 		return l;
 	}
 	
-=======
->>>>>>> Stashed changes
 	public String insertPatron(patron newPatron) {
 		dbConnect();
 		String sql = "insert into patrons (name,cardExpirationDate) values (?,?)";
@@ -155,6 +153,7 @@ public class DB {
 		dbClose();
 		return "Succesfully inserted Patron.";
 	}
+	
 	public String removePatron(int id) {
 		dbConnect();
 		String sql = "delete from patrons where id=?";
@@ -171,10 +170,7 @@ public class DB {
 		dbClose();
 		return "Successfully removed patron.";
 	}
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 	public List<room> showRooms() {
 		dbConnect();
 		String sql = "select * from rooms";
@@ -192,11 +188,8 @@ public class DB {
 		dbClose();
 		return list;
 	}
-<<<<<<< Updated upstream
 
 
-=======
->>>>>>> Stashed changes
 	public List<video> showVideos() {
 		dbConnect();
 		String sql = "select * from videos";
@@ -214,6 +207,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
+	
 	public String insertBook(book temp) {
 		dbConnect();
 		String sql = "insert into books (title,author,publisher,callNumber,genre) values (?,?,?,?,?)";
@@ -233,6 +227,7 @@ public class DB {
 		dbClose();
 		return "Succesfully inserted Book.";
 	}
+	
 	public String insertVideo(video temp) {
 		dbConnect();
 		String sql = "insert into videos (title,director,releaseDate,callNumber,genre) values (?,?,?,?,?)";
@@ -252,6 +247,7 @@ public class DB {
 		dbClose();
 		return "Succesfully inserted Book.";
 	}
+	
 	public String removeBook(int bookRem) {
 		dbConnect();
 		String sql = "delete from books where id=?";
@@ -268,6 +264,7 @@ public class DB {
 		dbClose();
 		return "Successfully removed Book.";
 	}
+	
 	public String removeVideo(int vidRem) {
 		dbConnect();
 		String sql = "delete from videos where id=?";
@@ -284,6 +281,7 @@ public class DB {
 		dbClose();
 		return "Successfully removed Video.";
 	}
+	
 	public List<String> fetchCheckedOutBooks(int id) {
 
 		dbConnect();
@@ -308,6 +306,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
+
 	public List<String> fetchCheckedOutVideos(int id) {
 
 		dbConnect();
@@ -331,6 +330,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
+
 	public List<String> fetchOverdueBooks(int id) {
 
 		dbConnect();
@@ -395,10 +395,7 @@ public class DB {
 		dbClose();
 		return list;
 	}
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 	public List<book> getAvailableBooks(){
 		dbConnect();
 		String sql = "select * from books where id NOT IN (select books_id from checkedoutbooks);";
@@ -409,7 +406,6 @@ public class DB {
 
 			while(rst.next()) {
 				list.add(new book(rst.getInt("id"),rst.getString("title"),rst.getString("author"), rst.getString("publisher"), rst.getDouble("callNumber"), rst.getString("genre")));
-<<<<<<< Updated upstream
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -428,8 +424,6 @@ public class DB {
 
 			while(rst.next()) {
 				list.add(new video(rst.getInt("id"),rst.getString("title"),rst.getString("director"), rst.getString("releaseDate"), rst.getDouble("callNumber"), rst.getString("genre")));
-=======
->>>>>>> Stashed changes
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -437,7 +431,6 @@ public class DB {
 		dbClose();
 		return list;
 	}
-<<<<<<< Updated upstream
 
 
 	public void checkoutBook(checkedOutBook bReserve) {
@@ -474,57 +467,6 @@ public class DB {
 
 	public List<room> showFreeRooms() {
 		dbConnect();
-=======
-	public List<video> getAvailableVideos(){
-		dbConnect();
-		String sql = "select * from videos where id NOT IN (select videos_id from checkedoutvideos);";
-		List<video> list = new ArrayList<>();
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			ResultSet rst = pstmt.executeQuery();
-
-			while(rst.next()) {
-				list.add(new video(rst.getInt("id"),rst.getString("title"),rst.getString("director"), rst.getString("releaseDate"), rst.getDouble("callNumber"), rst.getString("genre")));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-		return list;
-	}
-	public void checkoutBook(checkedOutBook bReserve) {
-		dbConnect();
-		String sql = "insert into checkedOutBooks(patrons_id,books_id,dueDate) "
-				+ "values (?,?,?)";
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, bReserve.getPatrons_id());
-			pstmt.setInt(2, bReserve.getBooks_id());
-			pstmt.setDate(3, bReserve.getDueDate());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-	}
-	public void checkOutVideo(checkedOutVideo vReserve) {
-		dbConnect();
-		String sql = "insert into checkedoutvideos(patrons_id,videos_id,dueDate) "
-				+ "values (?,?,?)";
-		try {
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, vReserve.getPatrons_id());
-			pstmt.setInt(2, vReserve.getVideos_id());
-			pstmt.setDate(3, vReserve.getDueDate());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		dbClose();
-	}
-	public List<room> showFreeRooms() {
-		dbConnect();
->>>>>>> Stashed changes
 		String sql = "select * from rooms where roomNumber NOT IN (select rooms_roomNumber from checkedoutrooms);";
 
 		List<room> list = new ArrayList<>();
@@ -557,10 +499,7 @@ public class DB {
 		dbClose();
 		
 	}
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 	public String checkInBook(double callNum) {
 		dbConnect();
 		String sql = "delete cb from checkedoutbooks cb left join books b on b.id = cb.books_id where callNumber = ?";
@@ -577,10 +516,7 @@ public class DB {
 		dbClose();
 		return "Successfully checked in.";
 	}
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 	public String checkInVideo(double callNum) {
 		dbConnect();
 		String sql = "delete cv from checkedoutvideos cv left join videos v on v.id = cv.videos_id where callNumber = ?;";
