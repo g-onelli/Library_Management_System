@@ -687,18 +687,58 @@ public class DB {
 			String sqlCmd = "select * from requests";
 			PreparedStatement cmd = con.prepareStatement(sqlCmd);
 			ResultSet result = cmd.executeQuery();
-
-			while (result.next()) {
-				// public request(int id, String description, Date submissionDate, String title,
-				// String author)
-				reqList.add(new request(result.getInt("id"), result.getString("description"),
-						result.getDate("submissionDate"), result.getString("title"), result.getString("author")));
-			}
+			
+			while(result.next()) {
+				//public request(int id, String description, Date submissionDate, String title, String author)
+				reqList.add(new request(result.getInt("id"),
+						result.getString("description"),
+						result.getDate("submissionDate"),
+						result.getString("title"),
+						result.getString("author")));}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		dbClose();
 		return reqList;
+	}
+	
+	public void confirmRequest(int id, String genre, String publisher, double callNum) {
+		//int id, String description, Date submissionDate, String title, String author
+		dbConnect();
+		String selectCmd = "select * from requests where id=?";
+		request conReq = new request();
+		try {
+			PreparedStatement getObj = con.prepareStatement(selectCmd);
+			getObj.setInt(1,id);
+			ResultSet objResult = getObj.executeQuery();
+			objResult.next();
+			conReq = new request(objResult.getInt("id"),
+					objResult.getString("description"),
+					objResult.getDate("submissionDate"),
+					objResult.getString("title"),
+					objResult.getString("author"));
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		dbClose();
+		//int id, String title, String author, String publisher, Double callNumber, String genre
+		book newBook = new book(1,conReq.getTitle(),conReq.getAuthor(),publisher,callNum,genre);
+		insertBook(newBook);
+		System.out.println("The book has been added to the library's collections");
+		String deleteCmd = "delete from requests where id=?";
+		dbConnect();
+		try {
+			PreparedStatement delObj = con.prepareStatement(deleteCmd);
+			delObj.setInt(1, id);
+			delObj.executeUpdate();
+			System.out.println("The request has been removed from the request database.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("");
+		System.out.println("Returning to librarian menu.");
+		System.out.println("");
+		dbClose();
 	}
 
 	public List<book> searchBooks(String tag, String term) {
