@@ -1,6 +1,7 @@
 
 package com.main;
 
+import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Scanner;
@@ -13,7 +14,6 @@ import com.main.utility.PatronUtility;
 import com.main.utility.RoomUtility;
 import com.menuCalls.MenuDisplay;
 
-
 public class MenuScreen {
     public static void main(String[] args) {
         DB db = new DB();
@@ -21,6 +21,7 @@ public class MenuScreen {
         Scanner loginChoice = new Scanner(System.in);
         Scanner login = new Scanner(System.in);
         MenuDisplay.mainMenuDisplay();
+        int patron_id;
         System.out.println("Please choose an option: ");
         int loginInput = loginChoice.nextInt();
         if (loginInput == 0) {
@@ -61,24 +62,27 @@ public class MenuScreen {
                 // Call switch statement for librarian menu
                 switch (librarianInput) {
                     case 1:
-                        // MenuDisplay.viewVideoBooks();
-                        int vid = loginChoice.nextInt();
+
                         while (true) {
-                            if (librarianInput == 0) {
+                            MenuDisplay.viewVideoBooks();
+                            int vid = loginChoice.nextInt();
+                            if (vid == 0) {
                                 System.out.println("Exiting.. Bye");
                                 break;
                             }
                             switch (vid) {
                                 case 1:
                                     // Display all the books from the database
-                                    List<book> books = db.showBooks();
+                                    List<book> books = new ArrayList<>();
+                                    books = db.showBooks();
                                     for (book b : books) {
                                         System.out.println(b.toString());
                                     }
                                     break;
                                 case 2:
                                     // Display all the videos from the database
-                                    List<video> videos = db.showVideos();
+                                    List<video> videos = new ArrayList<>();
+                                    videos = db.showVideos();
                                     for (video v : videos) {
                                         System.out.println(v.toString());
                                     }
@@ -87,6 +91,7 @@ public class MenuScreen {
                                     // Add Books
                                     book temp;
                                     System.out.println("Enter Book Title:");
+                                    loginChoice.nextLine();
                                     String title = loginChoice.nextLine();
                                     System.out.println("Enter Book Author:");
                                     String author = loginChoice.nextLine();
@@ -95,6 +100,7 @@ public class MenuScreen {
                                     System.out.println("Enter Book Call Number:");
                                     double callNum = loginChoice.nextDouble();
                                     System.out.println("Enter Book Genere:");
+                                    loginChoice.nextLine();
                                     String genere = loginChoice.nextLine();
                                     temp = new book(0, title, author, publisher, callNum, genere);
                                     // Add book to database using the DB class
@@ -104,6 +110,7 @@ public class MenuScreen {
                                     // Add Videos
                                     video tempVid;
                                     System.out.println("Enter Video Title:");
+                                    loginChoice.nextLine();
                                     title = loginChoice.nextLine();
                                     System.out.println("Enter Video Director:");
                                     String director = loginChoice.nextLine();
@@ -112,6 +119,7 @@ public class MenuScreen {
                                     System.out.println("Enter Video Call Number:");
                                     callNum = loginChoice.nextDouble();
                                     System.out.println("Enter Video Genere:");
+                                    loginChoice.nextLine();
                                     genere = loginChoice.nextLine();
                                     tempVid = new video(0, title, director, release, callNum, genere);
                                     // add video to database using db class
@@ -131,6 +139,28 @@ public class MenuScreen {
                                     // remove book from database and return success/fail state
                                     System.out.println(db.removeVideo(vidRem));
                                     break;
+                                case 7:
+                                    MenuDisplay.searchBooksDisplay();
+                                    loginChoice.nextLine();
+                                    String tag = loginChoice.nextLine();
+                                    MenuDisplay.searchTermDisplay();
+                                    String term = loginChoice.nextLine();
+                                    List<book> bList = db.searchBooks(tag, term);
+                                    for (book b : bList) {
+                                        System.out.println(b);
+                                    }
+                                    break;
+                                case 8:
+                                    MenuDisplay.searchVideosDisplay();
+                                    loginChoice.nextLine();
+                                    tag = loginChoice.nextLine();
+                                    MenuDisplay.searchTermDisplay();
+                                    term = loginChoice.nextLine();
+                                    List<video> vList = db.searchVideos(tag, term);
+                                    for (video v : vList) {
+                                        System.out.println(v);
+                                    }
+                                    break;
                                 default:
                                     break;
                             }
@@ -140,26 +170,25 @@ public class MenuScreen {
                         // Room collections -output list of rooms from the database
                         System.out.println("List of schedulable rooms:");
 
-                        List<room> rooms = db.showRooms();
-
-                        for (room r : rooms) {
-                            System.out.println(r.toString());
+                        List<String> list = db.showRooms();
+                        for (String r : list) {
+                            System.out.println(r);
                         }
                         break;
                     case 3:
                         // View / modify patrons
-                        // MenuDisplay.viewModifyPatrons();
-                        int vMP = loginChoice.nextInt();
                         while (true) {
-                            if (librarianInput == 0) {
+                            MenuDisplay.viewModifyPatrons();
+                            int vMP = loginChoice.nextInt();
+                            if (vMP == 0) {
                                 System.out.println("Exiting.. Bye");
                                 break;
                             }
                             switch (vMP) {
                                 case 1:
                                     // show all patrons
-                                    List<patron> pats = db.showPatrons();
-
+                                    List<patron> pats = new ArrayList<>();
+                                    pats = db.showPatrons();
                                     System.out.println("List of Patrons:");
                                     for (patron p : pats) {
                                         System.out.println(p.toString());
@@ -169,6 +198,7 @@ public class MenuScreen {
                                     // Register patrons
                                     patron tempPat;
                                     System.out.println("Enter Patron Name:");
+                                    loginChoice.nextLine();
                                     String name = loginChoice.nextLine();
                                     System.out.println("Enter Card Exp. Date:");
                                     String expDate = loginChoice.nextLine();
@@ -176,12 +206,12 @@ public class MenuScreen {
                                     String password = loginChoice.nextLine();
                                     tempPat = new patron(0, name, expDate, 0, password);
                                     System.out.println(db.insertPatron(tempPat));
-                                    // tempPat = new patron(0, name, expDate, 0);
                                     // add tempPat to the database
                                     break;
                                 case 3:
                                     // Remove Patrons
                                     System.out.println("Enter Patron ID to Remove Patron:");
+                                    loginChoice.nextLine();
                                     int toRem = loginChoice.nextInt();
                                     // remove patron from database and return success/fail state
                                     System.out.println(db.removePatron(toRem));
@@ -191,20 +221,74 @@ public class MenuScreen {
                         }
                         break;
                     case 4:
+                        MenuDisplay.eventMenuDisplay();
+                        int eventInput = loginChoice.nextInt();
+
+                        switch(eventInput) {
+                            case 1:
+                                List<event> eventList = db.fetchEvents();
+                                for(event e: eventList) {
+                                    System.out.println(e);
+                                }
+                                break;
+                            case 2:
+                                System.out.println("Please input the event id: ");
+                                loginChoice.nextLine();
+                                String eventID = loginChoice.nextLine();
+
+                                System.out.println("Please input the field you would like to alter(date,description,title):");
+                                String modField = loginChoice.nextLine();
+
+                                System.out.println("Please input the new value for the selected field: ");
+                                String modValue = loginChoice.nextLine();
+                                db.editEvent(eventID,modField,modValue);
+                                break;
+                            case 3:
+                                loginChoice.nextLine();
+                                System.out.println("Please input title: ");
+                                String title = loginChoice.nextLine();
+                                System.out.println("Please input description: ");
+                                String description = loginChoice.nextLine();
+                                System.out.println("Please input date: ");
+                                String date = loginChoice.nextLine();
+                                System.out.println("Please input personal id number: ");
+                                int libId = loginChoice.nextInt();
+                                db.addEvent(date, description, title, libId);
+                                break;
+                            case 4:
+                                System.out.println("Please input the id value of the event you wish to delete: ");
+                                int idNum = loginChoice.nextInt();
+                                db.deleteEvent(idNum);
+                                break;
+                            default:
+                                System.out.println("Returning to librarian menu");
+                                break;
+                        }
                         break;
                     case 5:
+                        List<request> reqList=db.checkRequests();
+                        for(request r: reqList) {
+                            System.out.println(r);
+                        }
                         break;
                     case 6:
+                        loginChoice.nextLine();
+                        System.out.println("Please input the patron id: ");
+                        int libId = loginChoice.nextInt();
+                        loginChoice.nextLine();
+                        System.out.println("Please input the new expiration date: ");
+                        String exDate = loginChoice.nextLine();
+                        db.changeExpirationDate(libId, exDate);
                         break;
                     default:
                         break;
                 }
             }
 
-        } else {
+        }else if(loginInput == 2){
             //Call switch statement for patron menu
             int id;
-            while (true) {
+            while(true) {
                 System.out.println("------------Patron Login-----------\r\n");
                 System.out.println("Enter Id: ");
                 id = login.nextInt();
@@ -221,13 +305,13 @@ public class MenuScreen {
                         System.out.println("Invalid Password, Try Again");
                     } else {
                         System.out.println("Login Sucessful...");
+                        patron_id = id;
                         break;
                     }
                 }
             }
 
 
-            MenuDisplay.patMenuDisplay();
             while (true) {
                 MenuDisplay.patMenuDisplay();
                 int patronInput = loginChoice.nextInt();
@@ -237,16 +321,46 @@ public class MenuScreen {
                 }
                 switch (patronInput) {
                     case 1: // 1. View video and book collections
+                        while(true) {
+                            MenuDisplay.viewVideoBooksPat();
+                            patronInput = loginChoice.nextInt();
+                            if (patronInput == 0) {
+                                System.out.println("Exiting.. Bye");
+                                break;
+                            }
+                            switch(patronInput) {
+                                case 1:
+                                    // Display all the books from the database
+                                    List<book> books = new ArrayList<>();
+                                    books = db.showBooks();
+                                    for (book b : books) {
+                                        System.out.println(b.toString());
+                                    }
+                                    break;
+                                case 2:
+                                    // Display all the videos from the database
+                                    List<video> videos = new ArrayList<>();
+                                    videos = db.showVideos();
+                                    for (video v : videos) {
+                                        System.out.println(v.toString());
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                         break;
                     case 2: // 2. View room collections
-                        List<room> list = db.showRooms();
-                        for (room r : list) {
+
+                        System.out.println("List of schedulable rooms:");
+                        List<String> list = db.showRooms();
+                        for(String r: list) {
                             System.out.println(r);
                         }
                         break;
                     case 3: //3. View your checked out books and videos
-                        List<String> bookList = db.fetchCheckedOutBooks(id);
-                        if (bookList.isEmpty())
+                        List<String> bookList= db.fetchCheckedOutBooks(id);
+                        if(bookList.isEmpty())
                             System.out.println("You have no books checked out");
                         else {
                             System.out.println("Here are your checked out books");
@@ -255,20 +369,34 @@ public class MenuScreen {
                             }
                         }
                         List<String> videoList = db.fetchCheckedOutVideos(id);
-                        if (videoList.isEmpty())
+                        if(videoList.isEmpty())
                             System.out.println("You have no videos checked out");
-                        else {
+                        else{
                             System.out.println("Here are your checked out videos");
-                            for (String s : videoList) {
+                            for(String s: videoList){
                                 System.out.println(s);
                             }
                         }
-                        break;
                     case 4: // 4. Submit book requests
+                        request request = new request();
+                        System.out.println("Enter Book Title");
+                        String name = login.nextLine();
+                        System.out.println("Enter Book Author");
+                        String author = login.nextLine();
+                        System.out.println("Enter Book Description");
+                        String desc = login.nextLine();
+                        long millis=System.currentTimeMillis();
+                        java.sql.Date date=new java.sql.Date(millis);
+                        request.setTitle(name);
+                        request.setAuthor(author);
+                        request.setDescription(desc);
+                        request.setSubmissionDate(date);
+                        db.requestBook(request, patron_id);
+                        System.out.println("Book requested!");
                         break;
                     case 5: //5. View overdue books and videos
-                        List<String> overdueBooks = db.fetchOverdueBooks(id);
-                        if (overdueBooks.isEmpty())
+                        List<String> overdueBooks= db.fetchOverdueBooks(id);
+                        if(overdueBooks.isEmpty())
                             System.out.println("You have no books overdue");
                         else {
                             System.out.println("Here are your overdue books");
@@ -276,53 +404,44 @@ public class MenuScreen {
                                 System.out.println(s);
                             }
                         }
-                        List<String> overdueVideos = db.fetchOverdueVideos(id);
-                        if (overdueVideos.isEmpty())
+                        List<String> overdueVideos= db.fetchOverdueVideos(id);
+                        if(overdueVideos.isEmpty())
                             System.out.println("You have no videos overdue");
-                        else {
+                        else{
                             System.out.println("Here are your overdue videos");
-                            for (String s : overdueVideos) {
+                            for(String s: overdueVideos){
                                 System.out.println(s);
                             }
                         }
                         break;
                     case 6: // 6. Reserve a room
-                        while (true) {
+                        while(true) {
                             System.out.println("********************************");
                             System.out.println("Available Rooms");
-                            System.out.println(db.showFreeRooms());
+                            List<String> roomList = db.showFreeRooms();
+                            for(String s: roomList){
+                                System.out.println(s);
+                            }
                             System.out.println("********************************");
                             System.out.println("Enter a room number:");
-                            int roomId;
-                            try{
-                                roomId = login.nextInt();
-                            }
-                            catch (Exception e){
-                                System.out.println("Invalid input, returning to menu!!!");
-                                login.next();
-                                break;
-                            }
+                            int roomId = login.nextInt();
                             RoomUtility util = new RoomUtility();
-                            boolean isValidId = util.validateRoomId(db.showFreeRooms(), roomId);
-                            if (!isValidId) {
+                            boolean isValidId = util.validateRoomId(db.checkFreeRooms(), roomId);
+                            if(!isValidId) {
                                 System.out.println("Invalid ID or Room Reserved, Try Again");
-                            } else {
-                                System.out.println("Enter Patron ID: ");
+                            }
+                            else{
                                 checkedOutRoom reserve = new checkedOutRoom();
-                                int pId = login.nextInt();
-                                reserve.setPatrons_id(pId);
+                                reserve.setPatrons_id(patron_id);
                                 reserve.setRooms_roomnumber(roomId);
-                                long millis = System.currentTimeMillis();
-                                java.sql.Date date = new java.sql.Date(millis);
-                                System.out.println(date);
-                                reserve.setDueDate(date);
+                                long millis2=System.currentTimeMillis();
+                                java.sql.Date date2=new java.sql.Date(millis2);
+                                reserve.setDueDate(date2);
                                 db.reserveRoom(reserve);
                                 System.out.println("Room Reserved.");
                                 break;
                             }
                         }
-                        break;
-
                     case 7://check in a book or video
                         System.out.println("********************************");
                         System.out.println("Checking in book, video, or both?");
@@ -406,7 +525,7 @@ public class MenuScreen {
                             }
                             System.out.println("Enter Book or Video Call Number");
                             try{
-                                 callNum = login.nextDouble();
+                                callNum = login.nextDouble();
                             }
                             catch (Exception e){
                                 System.out.println("Invalid input, returning to menu!!!");
@@ -427,11 +546,11 @@ public class MenuScreen {
                                 checkedOutBook bReserve = new checkedOutBook();
                                 bReserve.setPatrons_id(id);
                                 bReserve.setBooks_id(b.getId());
-                                long millis = System.currentTimeMillis();
-                                java.sql.Date date = new java.sql.Date(millis);
-                                bReserve.setDueDate(date);
+                                long millis2 = System.currentTimeMillis();
+                                java.sql.Date date2 = new java.sql.Date(millis2);
+                                bReserve.setDueDate(date2);
                                 db.checkoutBook(bReserve);
-                                System.out.println("Book Checked Out and is due on: " + date);
+                                System.out.println("Book Checked Out and is due on: " + date2);
                                 break;
                             } else if (isValidCallNum == 1) {
                                 checkedOutVideo vReserve = new checkedOutVideo();
@@ -443,12 +562,12 @@ public class MenuScreen {
                                 }
                                 vReserve.setPatrons_id(id);
                                 vReserve.setVideos_id(v.getId());
-                                long millis = System.currentTimeMillis();
-                                java.sql.Date date = new java.sql.Date(millis);
-                                System.out.println(date);
-                                vReserve.setDueDate(date);
+                                long millis3 = System.currentTimeMillis();
+                                java.sql.Date date3 = new java.sql.Date(millis3);
+                                System.out.println(date3);
+                                vReserve.setDueDate(date3);
                                 db.checkOutVideo(vReserve);
-                                System.out.println("Book Checked Out and is due on: " + date);
+                                System.out.println("Book Checked Out and is due on: " + date3);
                                 break;
                             }
                         }
@@ -457,6 +576,10 @@ public class MenuScreen {
                         break;
                 }
             }
+        }
+        else {
+            System.out.println("Invalid input");
+            System.out.println("Exiting...");
         }
     }
 }
