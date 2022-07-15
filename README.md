@@ -4,17 +4,14 @@ Team Members:
 **Ian Kelly**
   *Tasks Assigned*
 - Add/Remove/View videos and books 
-- View Rooms(Completed) 
-- View/Register/Remove Patrons(Completed)
+- View Rooms
+- View/Register/Remove Patrons
  
   *Tasks Completed*
-- Add videos and books
-- Remove videos and books
-- View videos and books
+- Add/Remove/View videos and books 
 - View rooms
-- View Patrons
-- Register Patrons
-- Remove Patrons
+- View/Register/Remove Patrons
+- Search books and videos
 
 **Gabriella Onelli**
   *Tasks Assigned*
@@ -24,23 +21,21 @@ Team Members:
 - Search books and videos
 
   *Tasks Completed*
-- View events
-- Add events
-- Remove events
-- Edit events
-- View book requests
+- View/Add/Remove/Edit Events 
+- View/Complete Book Requests 
 - Issue new library cards
 
 **Jakob Ramsey** 
   *Tasks Assigned*
-- View/Return Books and Videos 
+- View Checked Out Books and Videos 
 - Pay Overdue Books and Videos 
 - Check out books and Videos
+- Return books and videos
 
   *Tasks Completed*
-- View books and videos
-- return books and videos
-- checkout books and videos
+- View Checked Out Books and Videos 
+- Checkout books and videos
+- Return books and videos
 
 **Gavin Burke**
   *Tasks Assigned*
@@ -48,9 +43,11 @@ Team Members:
 - Patron Login
 - Submit Book Requests
 - View/Schedule Rooms and Room Collections 
+- View videos and books
 
   *Tasks Completed*
 - Librarian Login
 - Patron Login
 - Submit Book Requests
 - View/Schedule Rooms and Room Collections 
+- View videos and books
